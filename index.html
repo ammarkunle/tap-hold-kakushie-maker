@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tap&amp;Hold Kakushie Maker — X Tap and Hold Image Generator</title>
+  <meta name="description" content="Free Tap Hold & Kakushie maker. Turn any picture into an X 'Tap and Hold' image: it looks blank in the timeline and reveals itself when you tap to enlarge.">
+  <meta name="keywords" content="tap hold, tap and hold, x tap and hold, tap to reveal, click to reveal, kakushie, twitter hidden image, transparent png trick">
+  
+  <!-- Favicon / Chrome Tab Tray Icon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  
+  <!-- Canonical & PWA Manifest -->
+  <link rel="canonical" href="https://tapholdmaker.com/">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- OpenGraph Social Sharing Meta Tags -->
+  <meta property="og:title" content="Tap&amp;Hold Kakushie Maker — X Tap and Hold Image Generator">
+  <meta property="og:description" content="Create X / Twitter Tap and Hold hidden image illusions in seconds. 100% free and client-side private.">
+  <meta property="og:image" content="https://tapholdmaker.com/favicon.png">
+  <meta property="og:url" content="https://tapholdmaker.com/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tap&amp;Hold Kakushie Maker — X Tap and Hold Image Generator">
+  <meta name="twitter:description" content="Turn any picture into an X 'Tap and Hold' image: faint in the timeline, full color on tap.">
+  <meta name="twitter:image" content="https://tapholdmaker.com/favicon.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN + Custom Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- pako & UPNG.js for PNG-8 Palette Transparency Export (Official Kakushie Format) -->
+  <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+  <!-- Sticky Header -->
+  <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-md">
+    <div class="header-container mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <a href="#" class="brand-logo flex items-center gap-2.5 text-slate-900 no-underline">
+        <div class="logo-icon flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white font-bold text-lg shadow-md shadow-brand-500/20">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>
+        </div>
+        <span class="text-xl font-extrabold tracking-tight">Tap&amp;Hold Kakushie Maker</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#tool" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Tool</a>
+        <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Features</a>
+        <a href="#how-it-works" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">How It Works</a>
+        <a href="#what-is" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">What Is</a>
+        <a href="#faq" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">FAQ</a>
+        <a href="#tool" class="btn btn-primary rounded-lg px-4 py-2 text-sm">Make Image</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section (Introductory Page) -->
+    <section class="hero-section relative overflow-hidden bg-white py-16 sm:py-24 lg:py-28">
+      <div class="hero-bg-gradient absolute inset-0"></div>
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          
+          <div class="text-center lg:text-left">
+            <div class="hero-badge mb-6 flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 px-3.5 py-1.5 text-xs font-semibold text-brand-700">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
+                Free online tool
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold text-emerald-700 shadow-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                100% Private — Photos never leave your browser
+              </span>
+            </div>
+
+            <h1 class="hero-title text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+              Tap Hold &amp; Kakushie Maker.<br/>
+              <span class="text-brand-600">Hide images on X timeline.</span>
+            </h1>
+
+            <p class="hero-desc mt-6 mx-auto max-w-2xl text-center text-lg leading-relaxed text-slate-600 sm:text-xl">
+              Tap Hold turns your picture into a transparent PNG that looks faint and empty in the X / Twitter timeline, then snaps into full color when someone taps and holds to enlarge it.
+            </p>
+
+            <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
+              <a href="#tool" class="btn btn-primary rounded-xl px-7 py-3.5 text-base">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>
+                Start Creating
+              </a>
+              <a href="#how-it-works" class="btn btn-secondary rounded-xl px-7 py-3.5 text-base">How It Works</a>
+            </div>
+
+            <div class="hero-features mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-medium text-slate-500 lg:justify-start">
+              <span class="feature-tag flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Works on x.com</span>
+              <span class="feature-tag flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>32-bit PNG export</span>
+              <span class="feature-tag flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Mobile-friendly editor</span>
+            </div>
+          </div>
+
+          <!-- Hero Visual Demo Card -->
+          <div class="hero-demo-wrapper mx-auto w-full max-w-[420px]">
+            <div class="hero-cards-container relative h-[420px]">
+              <figure class="card-before absolute left-0 top-0 w-[50%] rotate-[-4deg] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                <div class="card-img-placeholder light-demo-bg flex items-center justify-center rounded-xl p-4 text-center">
+                  <div class="text-xs font-semibold text-slate-400">Timeline Thumbnail<br><span class="text-[10px] text-slate-300">(Faint / Blank)</span></div>
+                </div>
+                <figcaption class="py-2 text-center text-xs font-semibold text-slate-500">Before tap</figcaption>
+              </figure>
+
+              <figure class="card-after absolute bottom-0 right-0 w-[55%] rotate-[4deg] overflow-hidden rounded-2xl border border-brand-200 bg-white p-2 shadow-2xl">
+                <div class="card-img-placeholder dark-demo-bg flex items-center justify-center rounded-xl p-4 text-center">
+                  <div class="text-xs font-semibold text-brand-400">Revealed Image<br><span class="text-[10px] text-brand-300">(Full Color)</span></div>
+                </div>
+                <figcaption class="py-2 text-center text-xs font-semibold text-brand-700">After tap &amp; hold</figcaption>
+              </figure>
+
+              <div class="arrow-badge absolute left-1/2 top-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white bg-brand-600 text-white shadow-lg font-bold">→</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Tool Section (#tool) — Redesigned & Optimized Step 2 Structure -->
+    <section id="tool" class="scroll-mt-16 bg-slate-50 py-16 sm:py-24">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-10">
+        
+        <div class="mx-auto max-w-3xl text-center">
+          <h2 class="section-title text-3xl font-extrabold text-slate-900 sm:text-4xl">Create your tap to reveal image</h2>
+          <p class="section-subtitle mt-3 text-lg text-slate-600">Follow the 4 simple steps below to craft your hidden image illusion.</p>
+        </div>
+
+        <!-- STEP 1: Choose an image -->
+        <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">1</span>
+            <h3 class="text-xl font-bold text-slate-900">Choose an image</h3>
+          </div>
+
+          <div class="drop-zone border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-brand-50 hover:border-brand-400 rounded-2xl p-8 text-center cursor-pointer transition-all relative" id="drop-zone-main">
+            <input type="file" id="file-input-main" accept="image/*" class="hidden">
+            <div class="drop-content pointer-events-none relative" id="upload-content-main">
+              <div class="drop-icon mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-100 text-brand-600 mb-3">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h4 class="text-base font-bold text-slate-900">Drop your image here</h4>
+              <p class="mt-1 text-xs text-slate-500">or click to browse. Supports JPG, PNG, WebP up to 40MB.</p>
+            </div>
+            <div class="upload-preview hidden relative w-full max-w-xs mx-auto h-48 rounded-xl overflow-hidden bg-black flex items-center justify-center" id="preview-wrapper-main">
+              <img id="thumb-main" src="" alt="Uploaded image" class="max-w-full max-h-full object-contain">
+              <button class="btn-remove absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white hover:bg-red-600 flex items-center justify-center text-lg font-bold" id="clear-main">&times;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Adjust how it hides (Redesigned 2-Column Box Layout) -->
+        <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div class="flex flex-col gap-1 border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+              <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">2</span>
+              <h3 class="text-xl font-bold text-slate-900">Adjust how it hides</h3>
+            </div>
+            <p class="text-xs text-slate-500 pl-11">At first the whole picture is hidden before tap. Paint over just the areas you want visible before tap on the canvas below.</p>
+          </div>
+
+          <!-- 2-Column Grid: Left Controls (Output size & Brush editing) / Right Editing canvas & Sliders -->
+          <div class="grid gap-6 md:grid-cols-12 items-start">
+            
+            <!-- Left Column: Separate Output Size Box & Brush Editing Box (5 cols) -->
+            <div class="md:col-span-5 space-y-6">
+              
+              <!-- Box 1: Output size -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-3">
+                <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
+                  <span class="text-brand-600 text-base">•••</span> Output size
+                </div>
+
+                <select id="select-aspect" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none shadow-sm">
+                  <option value="auto" selected>Auto (original aspect ratio, recommended)</option>
+                  <option value="square">Square 1:1 — 2432×2432</option>
+                  <option value="portrait2x3">Portrait 2:3 — 1664×2432</option>
+                  <option value="portrait4x5">Portrait 4:5 — 1946×2432</option>
+                  <option value="portrait9x16">Portrait 9:16 — 1368×2432</option>
+                  <option value="landscape16x9">Landscape 16:9 — 2432×1368</option>
+                  <option value="landscape3x2">Landscape 3:2 — 2432×1621</option>
+                </select>
+
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                  Keeps the original aspect ratio, auto-adjusted to a size that stays hidden even on phones. Before an image is loaded, the placeholder is portrait 1664×2432.
+                </p>
+              </div>
+
+              <!-- Box 2: Brush editing -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
+                <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
+                  <span class="text-brand-600 text-base">•••</span> Brush editing
+                </div>
+
+                <!-- Mode Toggles -->
+                <div>
+                  <div class="text-xs font-semibold text-slate-600 mb-2">Mode</div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <button class="btn-mode active flex items-center justify-center py-2 px-3 text-xs font-bold rounded-xl border border-brand-500 bg-brand-50 text-brand-700 transition-all" id="btn-show-before-tap">
+                      Show before tap
+                    </button>
+                    <button class="btn-mode flex items-center justify-center py-2 px-3 text-xs font-semibold rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-all" id="btn-hide-before-tap">
+                      Hide before tap
+                    </button>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-2 leading-tight">
+                    Painting = that area shows before tap. To redo an area, paint over it with "Hide before tap".
+                  </p>
+                </div>
+
+                <!-- Brush Size Slider -->
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    <span>Brush size</span>
+                    <span id="brush-size-val" class="text-brand-600">32px</span>
+                  </div>
+                  <input type="range" id="brush-size" min="5" max="80" value="32" class="w-full">
+                </div>
+
+                <!-- Reset and Undo Action Buttons -->
+                <div class="space-y-2 pt-1">
+                  <button class="w-full btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2.5 text-xs font-bold rounded-xl transition-all shadow-sm" id="btn-reset-hidden">
+                    Reset all to "hidden"
+                  </button>
+                  <button class="w-full btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2.5 text-xs font-bold rounded-xl transition-all shadow-sm disabled:opacity-50" id="btn-undo">
+                    Undo
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Right Column: Editing canvas Box + Stacked Sliders (7 cols) -->
+            <div class="md:col-span-7">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-5">
+                
+                <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+                  <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
+                    <span class="text-brand-600 text-base">•••</span> Editing canvas
+                  </div>
+                  <div class="flex items-center gap-2 text-xs font-semibold text-slate-700">
+                    <span>Mask opacity</span>
+                    <span id="val-mask-opacity" class="text-brand-600">35%</span>
+                  </div>
+                </div>
+
+                <!-- Mask Opacity Slider -->
+                <div>
+                  <input type="range" id="slider-mask-opacity" min="0" max="100" value="35" class="w-full">
+                  <p class="text-[11px] text-slate-400 mt-1">Display-only setting. It does not affect the exported image.</p>
+                </div>
+
+                <!-- Canvas Wrapper Frame -->
+                <div class="canvas-wrapper relative w-full aspect-[16/9] rounded-2xl overflow-hidden border-2 border-slate-300 checkerboard-bg flex items-center justify-center shadow-sm" id="wrapper-edit">
+                  <canvas id="edit-canvas" width="800" height="450" class="w-full h-full block cursor-none object-contain relative z-10"></canvas>
+                  
+                  <!-- Circular Brush Cursor Ring Indicator -->
+                  <div id="brush-cursor" class="pointer-events-none absolute rounded-full border-2 border-white shadow-[0_0_6px_rgba(0,0,0,0.6)] hidden z-30 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+
+                  <!-- Placeholder text when no image loaded -->
+                  <div class="placeholder-text absolute inset-0 flex items-center justify-center p-6 text-center text-sm font-medium text-slate-400 pointer-events-none z-0" id="placeholder-edit">
+                    Load an image to brush-edit which areas are hidden or always visible here.
+                  </div>
+
+                  <div class="canvas-paint-hint absolute bottom-3 left-3 bg-slate-900/85 backdrop-blur-sm text-white px-3.5 py-1.5 rounded-full text-xs font-semibold pointer-events-none flex items-center gap-1.5 shadow-md z-20">
+                    🎨 <span>Paint image areas to keep visible before tap</span>
+                  </div>
+                </div>
+
+                <!-- Stacked Sliders: Before Tap Faintness & Brightness Boost (Right under Editing Canvas frame) -->
+                <div class="space-y-4 pt-3 border-t border-slate-200/60">
+                  <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                      <span>Before Tap Faintness</span>
+                      <span id="val-before-tap" class="text-brand-600">0.00</span>
+                    </div>
+                    <input type="range" id="slider-before-tap" min="0.0" max="0.3" step="0.01" value="0.0" class="w-full">
+                    <p class="text-[11px] text-slate-400 mt-1">Controls how faintly unpainted parts appear in the timeline preview.</p>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                      <span>Brightness Boost</span>
+                      <span id="val-brightness" class="text-brand-600">0</span>
+                    </div>
+                    <input type="range" id="slider-brightness" min="-50" max="50" step="2" value="0" class="w-full">
+                    <p class="text-[11px] text-slate-400 mt-1">Compensate for darker look when expanded on dark lightbox.</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- STEP 3: Check the preview -->
+        <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+              <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">3</span>
+              <h3 class="text-xl font-bold text-slate-900">Check the preview</h3>
+            </div>
+
+            <!-- Timeline Theme Toggle Pill (Light TL / Dark TL - Blue Palette) -->
+            <div class="inline-flex items-center p-1 bg-brand-50 border border-brand-200 rounded-full text-xs font-semibold shadow-inner" id="tl-toggle-wrap">
+              <button type="button" id="btn-tl-light" class="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold transition-all bg-brand-600 text-white shadow-sm">
+                <span class="inline-block w-2.5 h-2.5 rounded-full border-2 border-white"></span> Light TL
+              </button>
+              <button type="button" id="btn-tl-dark" class="flex items-center gap-1.5 px-3 py-1 rounded-full font-medium text-slate-600 hover:text-brand-700 transition-all">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-slate-400"></span> Dark TL
+              </button>
+            </div>
+          </div>
+
+          <!-- Centered Interactive Stage (Compact 50% smaller landscape box) -->
+          <div class="max-w-sm mx-auto w-full">
+            <div class="tap-stage relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-white border-2 border-slate-200 shadow-md cursor-pointer select-none touch-none transition-all duration-200" id="tap-stage">
+              <canvas id="output-canvas" width="800" height="450" class="w-full h-full block object-contain relative z-10"></canvas>
+              
+              <!-- Placeholder text when no image loaded -->
+              <div class="placeholder-text absolute inset-0 flex items-center justify-center p-4 text-center text-xs font-medium text-slate-400 pointer-events-none z-0" id="placeholder-out">
+                Tap &amp; hold stage to simulate background reveal
+              </div>
+
+              <div class="tap-overlay absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none transition-opacity duration-150 z-20" id="tap-overlay">
+                <div class="tap-instruction-badge flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-full text-[10px] font-bold tracking-wider shadow-lg whitespace-nowrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>
+                  <span>TAP &amp; HOLD TO SEE THE MAGIC</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stage-info flex items-center justify-between mt-2.5 px-1 text-[11px] text-slate-500 font-medium">
+              <span id="bg-indicator">State: <strong class="text-brand-600">Timeline (White BG)</strong></span>
+              <span>Hold stage to test reveal</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- STEP 4: Export -->
+        <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">4</span>
+            <h3 class="text-xl font-bold text-slate-900">Export</h3>
+          </div>
+
+          <div class="warning-callout rounded-xl border border-brand-200 bg-brand-50/70 p-4 flex gap-3 text-xs leading-relaxed text-brand-900">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-600 flex-shrink-0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <strong>Posting Advice:</strong> Post this image on <strong>x.com from a desktop browser</strong>. Do not use the X mobile app — it re-encodes images as JPEG and removes transparent alpha pixels.
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-full max-w-md mx-auto rounded-xl py-4 text-base font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20" id="btn-export">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Hidden PNG
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Everything You Need Section (#features) -->
+    <section id="features" class="bg-white py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        <div class="mx-auto max-w-3xl text-center">
+          <h2 class="section-title text-3xl font-extrabold text-slate-900 sm:text-4xl">Everything you need for a perfect tap and hold reveal</h2>
+          <p class="section-subtitle mt-3 text-lg text-slate-600">A focused set of controls that match how X actually renders images, so your hidden picture works the first time.</p>
+        </div>
+
+        <div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          
+          <div class="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 transition-all">
+            <div class="feature-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 mb-4 font-bold">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Upload any image</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Drop a JPG, PNG or WebP file. The tool automatically formats it to the ideal dimensions for X / Twitter timelines.</p>
+          </div>
+
+          <div class="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 transition-all">
+            <div class="feature-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 mb-4 font-bold">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m14.622 17.897-10.68-2.913"/><path d="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Paint what stays visible</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Use the brush tool to mark areas that appear in the timeline thumbnail. Everything else waits for the tap.</p>
+          </div>
+
+          <div class="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 transition-all">
+            <div class="feature-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 mb-4 font-bold">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Live before / after preview</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Test the interactive transformation directly in your browser with real-time background switching.</p>
+          </div>
+
+          <div class="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 transition-all">
+            <div class="feature-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 mb-4 font-bold">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Lossless PNG export</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Download a lightweight transparent PNG with full 32-bit alpha channel precision that X processes correctly.</p>
+          </div>
+
+          <div class="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 transition-all">
+            <div class="feature-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 mb-4 font-bold">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Post on x.com</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Upload the exported file from a desktop web browser. Mobile apps convert images to JPEG and break the trick.</p>
+          </div>
+
+          <div class="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 transition-all">
+            <div class="feature-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 mb-4 font-bold">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Private &amp; fast</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">All image processing happens locally inside your browser client. Nothing is ever uploaded to external servers.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- How the X Tap & Hold Trick Work (#how-it-works) -->
+    <section id="how-it-works" class="bg-slate-50 py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center">
+          <h2 class="section-title text-3xl font-extrabold text-slate-900 sm:text-4xl">How the X tap and hold trick works</h2>
+          <p class="section-subtitle mt-3 text-lg text-slate-600">Create a tap to reveal image in four simple steps. No account, no watermark.</p>
+        </div>
+
+        <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          
+          <div class="step-card relative rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+            <div class="step-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 font-bold text-lg">1</div>
+            <div class="mt-4 text-xs font-bold uppercase tracking-wider text-brand-600">Step 1</div>
+            <h3 class="mt-1 text-lg font-bold text-slate-900">Upload your image</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Drop any JPG or PNG into the tool. We resize it for optimal X / Twitter thumbnail dimensions.</p>
+          </div>
+
+          <div class="step-card relative rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+            <div class="step-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 font-bold text-lg">2</div>
+            <div class="mt-4 text-xs font-bold uppercase tracking-wider text-brand-600">Step 2</div>
+            <h3 class="mt-1 text-lg font-bold text-slate-900">Paint what to hide</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Select areas you want to keep secret until enlarged.</p>
+          </div>
+
+          <div class="step-card relative rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+            <div class="step-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 font-bold text-lg">3</div>
+            <div class="mt-4 text-xs font-bold uppercase tracking-wider text-brand-600">Step 3</div>
+            <h3 class="mt-1 text-lg font-bold text-slate-900">Preview the effect</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Tap and hold the stage to test the timeline look versus what appears when enlarged.</p>
+          </div>
+
+          <div class="step-card relative rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+            <div class="step-icon flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 font-bold text-lg">4</div>
+            <div class="mt-4 text-xs font-bold uppercase tracking-wider text-brand-600">Step 4</div>
+            <h3 class="mt-1 text-lg font-bold text-slate-900">Post on X from desktop</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">Download the transparent PNG file and upload it to x.com from a desktop browser.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- What is a Tap & Hold / Tap to Reveal Image? (#what-is) -->
+    <section id="what-is" class="bg-white py-16 sm:py-24">
+      <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <article class="prose prose-slate mx-auto">
+          <h2 class="text-3xl font-extrabold text-slate-900 text-center mb-6">What is a Tap and Hold / Tap to Reveal image?</h2>
+          <p class="text-lg leading-relaxed text-slate-600 mb-8">
+            A tap and hold image — also called tap to reveal, click to reveal, an X hidden image or a kakushie (カクシエ, 隠し絵) in Japanese — is a transparent PNG that looks almost blank or faint in the X / Twitter timeline and reveals its full appearance when a viewer taps and holds to enlarge it.
+          </p>
+
+          <div class="space-y-6 text-slate-600 leading-relaxed">
+            <h3 class="text-xl font-bold text-slate-900">Why does the trick work?</h3>
+            <p>
+              X generates a thumbnail for every uploaded image. For transparent PNGs, it flattens the picture onto a white background. This tool manipulates pixel alpha values so that when blended against white, the image equals a solid white background (or faint line art).
+            </p>
+            <p>
+              When someone taps to view the image in full screen, X renders the PNG on a black background. The transparent alpha pixels now read against black while the solid pixels show original colors, bringing the hidden picture to life!
+            </p>
+
+            <h3 class="text-xl font-bold text-slate-900">How to make a tap to reveal image</h3>
+            <ol class="list-decimal pl-6 space-y-2">
+              <li>Upload the picture you want to hide behind the tap.</li>
+              <li>Paint over areas on the editing canvas to choose what stays visible before tap.</li>
+              <li>Adjust faintness and brightness sliders.</li>
+              <li>Download the transparent PNG file.</li>
+              <li>Post it on x.com from a desktop browser and test on mobile.</li>
+            </ol>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section (#faq) -->
+    <section id="faq" class="bg-slate-50 py-16 sm:py-24">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center">
+          <h2 class="section-title text-3xl font-extrabold text-slate-900 sm:text-4xl">Frequently asked questions</h2>
+          <p class="section-subtitle mt-3 text-lg text-slate-600">Quick answers about tap and hold / tap to reveal images on X.</p>
+        </div>
+
+        <div class="mt-12 space-y-4">
+          
+          <div class="faq-item rounded-xl border border-slate-200 bg-white">
+            <button class="faq-question flex w-full items-center justify-between px-6 py-4 text-left font-semibold text-slate-900">
+              <span>What is a tap hold image maker?</span>
+              <svg class="faq-chevron h-5 w-5 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-answer px-6 pb-5 text-sm leading-relaxed text-slate-600">
+              It is a free browser tool that creates transparent PNG images which look faint or blank in the X / Twitter timeline and reveal their full appearance when someone taps and holds to enlarge them.
+            </div>
+          </div>
+
+          <div class="faq-item rounded-xl border border-slate-200 bg-white">
+            <button class="faq-question flex w-full items-center justify-between px-6 py-4 text-left font-semibold text-slate-900">
+              <span>Can I post the image from the X mobile app?</span>
+              <svg class="faq-chevron h-5 w-5 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-answer hidden px-6 pb-5 text-sm leading-relaxed text-slate-600">
+              No. The X mobile app re-encodes images as JPEG, which removes transparent pixels and breaks the effect. Always post from a desktop web browser at x.com.
+            </div>
+          </div>
+
+          <div class="faq-item rounded-xl border border-slate-200 bg-white">
+            <button class="faq-question flex w-full items-center justify-between px-6 py-4 text-left font-semibold text-slate-900">
+              <span>Is my image uploaded to a server?</span>
+              <svg class="faq-chevron h-5 w-5 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-answer hidden px-6 pb-5 text-sm leading-relaxed text-slate-600">
+              No. All processing happens locally inside your browser client using HTML5 Canvas. Your image never leaves your computer.
+            </div>
+          </div>
+
+          <div class="faq-item rounded-xl border border-slate-200 bg-white">
+            <button class="faq-question flex w-full items-center justify-between px-6 py-4 text-left font-semibold text-slate-900">
+              <span>How does the live preview work?</span>
+              <svg class="faq-chevron h-5 w-5 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-answer hidden px-6 pb-5 text-sm leading-relaxed text-slate-600">
+              The live stage allows you to press and hold your mouse button or touch screen to instantly toggle the background between White (timeline mode) and Black (lightbox enlarged mode).
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-slate-900 text-slate-400">
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        
+        <div class="lg:col-span-2">
+          <a href="#" class="flex items-center gap-2.5 text-white font-extrabold text-xl no-underline">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>
+            </div>
+            Tap&amp;Hold Kakushie Maker
+          </a>
+          <p class="mt-4 max-w-xs text-sm text-slate-400 leading-relaxed">
+            Free online maker for X tap and hold, tap to reveal and click to reveal transparent PNG images.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-200">Product</h3>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a href="#tool" class="hover:text-brand-400">Tool</a></li>
+            <li><a href="#features" class="hover:text-brand-400">Features</a></li>
+            <li><a href="#how-it-works" class="hover:text-brand-400">How it works</a></li>
+            <li><a href="#faq" class="hover:text-brand-400">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-200">Resources</h3>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a href="#what-is" class="hover:text-brand-400">What is tap hold</a></li>
+            <li><a href="#how-it-works" class="hover:text-brand-400">Tap to reveal guide</a></li>
+            <li><a href="#how-it-works" class="hover:text-brand-400">X tap and hold</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-200">Legal &amp; Support</h3>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><button type="button" id="link-privacy" class="hover:text-brand-400 cursor-pointer">Privacy Policy</button></li>
+            <li><button type="button" id="link-terms" class="hover:text-brand-400 cursor-pointer">Terms of Service</button></li>
+            <li><a href="https://buymeacoffee.com/" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1.5 mt-2">☕ Buy Me a Coffee</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="mt-12 border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center text-sm text-slate-500">
+        <div>&copy; 2026 Tap&amp;Hold Kakushie Maker. All rights reserved.</div>
+        <div class="text-xs text-slate-400 flex items-center gap-1">
+          <span>🔒 100% Client-Side Browser Processing</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PRIVACY POLICY MODAL -->
+  <div id="modal-privacy" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 shadow-2xl space-y-5 border border-slate-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>🔒</span> Privacy Policy
+        </h3>
+        <button type="button" id="close-privacy" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
+      </div>
+      <div class="text-sm text-slate-600 space-y-4 leading-relaxed">
+        <p><strong>1. Local Client-Side Processing</strong><br>
+        Tap&amp;Hold Kakushie Maker processes all image uploads, canvas manipulations, and PNG exports 100% locally inside your web browser. Your images and personal files are <strong>never uploaded, transmitted, or stored</strong> on any external server.</p>
+        
+        <p><strong>2. Data Collection</strong><br>
+        We do not collect personal identification information. Standard web analytics (such as page view counts) may be used strictly to optimize site performance and user experience.</p>
+        
+        <p><strong>3. Advertising &amp; Cookies</strong><br>
+        This web application may display third-party advertisements (such as Google AdSense). Third-party vendors may use cookies to serve ads based on prior visits to our site.</p>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button type="button" id="btn-close-privacy" class="btn btn-primary px-5 py-2 rounded-xl text-sm font-semibold">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMS OF SERVICE MODAL -->
+  <div id="modal-terms" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 shadow-2xl space-y-5 border border-slate-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>⚖️</span> Terms of Service
+        </h3>
+        <button type="button" id="close-terms" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
+      </div>
+      <div class="text-sm text-slate-600 space-y-4 leading-relaxed">
+        <p><strong>1. Acceptance of Terms</strong><br>
+        By accessing and using Tap&amp;Hold Kakushie Maker, you agree to comply with these terms of service and all applicable laws and regulations.</p>
+        
+        <p><strong>2. Permitted Use</strong><br>
+        You are free to use this tool for personal and commercial image generation. You retain full ownership and copyright of all images you process using this web app.</p>
+        
+        <p><strong>3. Disclaimer of Liability</strong><br>
+        This service is provided "as is" without warranties of any kind. We are not responsible for any platform policy changes by X (Twitter) or third-party social networks.</p>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button type="button" id="btn-close-terms" class="btn btn-primary px-5 py-2 rounded-xl text-sm font-semibold">I Agree</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
