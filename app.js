@@ -289,7 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- Circular Brush Ring Cursor Position & Scaling ---
+  const wrapperEdit = document.getElementById('wrapper-edit');
+
   function updateBrushCursorSize() {
+    if (!editCanvas.width) return;
     const rect = editCanvas.getBoundingClientRect();
     if (!rect.width) return;
     const scale = rect.width / editCanvas.width;
@@ -299,11 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateBrushCursorPos(e) {
-    if (!state.imgMain) {
+    if (!state.imgMain || !wrapperEdit) {
       brushCursor.classList.add('hidden');
       return;
     }
-    const rect = editCanvas.getBoundingClientRect();
+    const rect = wrapperEdit.getBoundingClientRect();
     const localX = e.clientX - rect.left;
     const localY = e.clientY - rect.top;
 
@@ -317,9 +320,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  editCanvas.addEventListener('mouseenter', e => updateBrushCursorPos(e));
-  editCanvas.addEventListener('mousemove', e => updateBrushCursorPos(e));
-  editCanvas.addEventListener('mouseleave', () => brushCursor.classList.add('hidden'));
+  if (wrapperEdit) {
+    wrapperEdit.addEventListener('mouseenter', e => updateBrushCursorPos(e));
+    wrapperEdit.addEventListener('mousemove', e => updateBrushCursorPos(e));
+    wrapperEdit.addEventListener('mouseleave', () => brushCursor.classList.add('hidden'));
+  }
 
   // --- Ultra-Fast Drawing Engine ---
   editCanvas.addEventListener('mousedown', startDrawing);

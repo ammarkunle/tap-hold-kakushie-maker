@@ -219,9 +219,7 @@
               <button class="btn-remove absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white hover:bg-red-600 flex items-center justify-center text-lg font-bold" id="clear-main">&times;</button>
             </div>
           </div>
-        </div>
-
-        <!-- STEP 2: Adjust how it hides (Reorganized Card Layout) -->
+                <!-- STEP 2: Adjust how it hides (Combined Left Card / Right Cards Layout) -->
         <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <div class="flex flex-col gap-1 border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3">
@@ -231,57 +229,44 @@
             <p class="text-xs text-slate-500 pl-11">At first the whole picture is hidden before tap. Paint over just the areas you want visible before tap on the canvas below.</p>
           </div>
 
-          <!-- 2-Column Responsive Layout: Left (Editing Canvas Card) / Right (Controls Stack) -->
+          <!-- 2-Column Responsive Layout: Left (Combined Canvas & Brush Editing) / Right (Output Size & Image Adjustments) -->
           <div class="grid gap-6 md:grid-cols-12 items-start">
             
-            <!-- Left Column (Desktop 7 cols / Mobile Top): 1. Editing Canvas Card (First Element) -->
+            <!-- Left Column (Desktop 7 cols / Mobile Top): Single Combined Editing Canvas & Brush Controls Card -->
             <div class="md:col-span-7">
-              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4 shadow-sm">
+                
+                <!-- Card Header with Mask Opacity Slider RIGHT ABOVE CANVAS -->
+                <div class="flex items-center justify-between border-b border-slate-200/60 pb-3 flex-wrap gap-2">
                   <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
                     <span class="text-brand-600 text-base">•••</span> Editing canvas
                   </div>
-                  <span class="text-[11px] font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
-                    Active Editor
-                  </span>
+                  <div class="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
+                    <span>Mask opacity</span>
+                    <span id="val-mask-opacity" class="text-brand-600 font-bold min-w-[28px]">35%</span>
+                    <input type="range" id="slider-mask-opacity" min="0" max="100" value="35" class="w-20 sm:w-28">
+                  </div>
                 </div>
 
-                <!-- Interactive Editor Wrapper -->
-                <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-slate-900 shadow-inner flex items-center justify-center cursor-crosshair border border-slate-300" id="wrapper-edit">
-                  <canvas id="edit-canvas" width="800" height="450" class="w-full h-full block object-contain relative z-10"></canvas>
+                <!-- Interactive Editor Canvas with RESTORED CHECKERBOARD BG & Cursor -->
+                <div class="canvas-wrapper relative w-full aspect-[16/9] rounded-xl overflow-hidden checkerboard-bg flex items-center justify-center border border-slate-300 shadow-inner cursor-none" id="wrapper-edit">
+                  <canvas id="edit-canvas" width="800" height="450" class="w-full h-full block object-contain relative z-10 cursor-none"></canvas>
                   
-                  <!-- Circular Ring Cursor -->
-                  <div id="brush-cursor" class="pointer-events-none fixed z-50 rounded-full border-2 border-brand-500 bg-brand-500/20 shadow-sm hidden -translate-x-1/2 -translate-y-1/2"></div>
+                  <!-- Circular Ring Cursor Ring (Absolute inside wrapper-edit) -->
+                  <div id="brush-cursor" class="pointer-events-none absolute z-30 rounded-full border-2 border-brand-500 bg-brand-500/25 shadow-md hidden -translate-x-1/2 -translate-y-1/2"></div>
                   
                   <div class="placeholder-text absolute inset-0 flex items-center justify-center p-4 text-center text-xs font-medium text-slate-400 pointer-events-none z-0" id="placeholder-edit">
                     Upload an image in Step 1 to start painting
                   </div>
                 </div>
 
-                <!-- Display-Only Red Mask Opacity Control -->
-                <div class="pt-2 border-t border-slate-200/60">
-                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                    <span>Mask Overlay Opacity (Display only)</span>
-                    <span id="val-mask-opacity" class="text-brand-600 font-bold">35%</span>
+                <!-- Brush Editing Controls Integrated Directly Inside the Left Card -->
+                <div class="pt-2 border-t border-slate-200/60 space-y-3">
+                  <div class="flex items-center gap-2 font-bold text-xs text-slate-800">
+                    <span>🎨 Brush Mode &amp; Controls</span>
                   </div>
-                  <input type="range" id="slider-mask-opacity" min="0" max="100" value="35" class="w-full">
-                  <p class="text-[10px] text-slate-400 mt-1">Adjusts the red mask transparency in the editor. Does not affect final PNG export.</p>
-                </div>
-              </div>
-            </div>
 
-            <!-- Right Column (Desktop 5 cols / Mobile Bottom): Stacked Controls in Exact Requested Order -->
-            <div class="md:col-span-5 space-y-6">
-              
-              <!-- Card 2: Brush Editing Card -->
-              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
-                <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
-                  <span class="text-brand-600 text-base">•••</span> Brush editing
-                </div>
-
-                <!-- Mode Toggles -->
-                <div>
-                  <div class="text-xs font-semibold text-slate-600 mb-2">Mode</div>
+                  <!-- Mode Buttons -->
                   <div class="grid grid-cols-2 gap-2">
                     <button class="btn-mode active flex items-center justify-center py-2 px-3 text-xs font-bold rounded-xl border border-brand-500 bg-brand-50 text-brand-700 transition-all" id="btn-show-before-tap">
                       Show before tap
@@ -290,37 +275,40 @@
                       Hide before tap
                     </button>
                   </div>
-                  <p class="text-[11px] text-slate-500 mt-2 leading-tight">
-                    Painting = that area shows before tap. To redo an area, paint over it with "Hide before tap".
-                  </p>
-                </div>
 
-                <!-- Brush Size Slider (50px to 200px) -->
-                <div>
-                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                    <span>Brush size</span>
-                    <span id="brush-size-val" class="text-brand-600 font-bold">100px</span>
+                  <!-- Brush Size Slider (50px to 200px) -->
+                  <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                      <span>Brush size</span>
+                      <span id="brush-size-val" class="text-brand-600 font-bold">100px</span>
+                    </div>
+                    <input type="range" id="brush-size" min="50" max="200" value="100" class="w-full">
                   </div>
-                  <input type="range" id="brush-size" min="50" max="200" value="100" class="w-full">
+
+                  <!-- Action Buttons Side by Side -->
+                  <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button class="btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2 text-xs font-bold rounded-xl transition-all shadow-2xs" id="btn-reset-hidden">
+                      Reset to "hidden"
+                    </button>
+                    <button class="btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2 text-xs font-bold rounded-xl transition-all shadow-2xs disabled:opacity-50" id="btn-undo">
+                      Undo
+                    </button>
+                  </div>
                 </div>
 
-                <!-- Reset and Undo Action Buttons -->
-                <div class="space-y-2 pt-1">
-                  <button class="w-full btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2.5 text-xs font-bold rounded-xl transition-all shadow-sm" id="btn-reset-hidden">
-                    Reset all to "hidden"
-                  </button>
-                  <button class="w-full btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2.5 text-xs font-bold rounded-xl transition-all shadow-sm disabled:opacity-50" id="btn-undo">
-                    Undo
-                  </button>
-                </div>
               </div>
-              <!-- Card 3: Output Size Card -->
-              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-3">
+            </div>
+
+            <!-- Right Column (Desktop 5 cols / Mobile Bottom): Output Size & Image Adjustments Cards -->
+            <div class="md:col-span-5 space-y-5">
+              
+              <!-- Card 1: Output Size Card -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-4 sm:p-5 space-y-3 shadow-sm">
                 <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
                   <span class="text-brand-600 text-base">•••</span> Output size
                 </div>
 
-                <select id="select-aspect" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none shadow-sm">
+                <select id="select-aspect" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none shadow-2xs">
                   <option value="auto" selected>Auto (original aspect ratio, recommended)</option>
                   <option value="square">Square 1:1 — 2432×2432</option>
                   <option value="portrait2x3">Portrait 2:3 — 1664×2432</option>
@@ -331,12 +319,12 @@
                 </select>
 
                 <p class="text-[11px] text-slate-500 leading-relaxed">
-                  Keeps the original aspect ratio, auto-adjusted to a size that stays hidden even on phones.
+                  Keeps the original aspect ratio, auto-adjusted to stay hidden on mobile.
                 </p>
               </div>
 
-              <!-- Card 4 (Last Card in Section 2): Adjustments Card (Brightness Boost & Auto Line Art) -->
-              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
+              <!-- Card 2: Image Adjustments Card (Brightness Boost & Auto Line Art) -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-4 sm:p-5 space-y-4 shadow-sm">
                 <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
                   <span class="text-brand-600 text-base">•••</span> Image Adjustments
                 </div>
@@ -348,7 +336,7 @@
                     <span id="val-brightness" class="text-brand-600 font-bold">0</span>
                   </div>
                   <input type="range" id="slider-brightness" min="-50" max="50" step="2" value="0" class="w-full">
-                  <p class="text-[11px] text-slate-500 mt-1">Adjusts brightness of checkerboard pixels to reveal colors vividly.</p>
+                  <p class="text-[10px] text-slate-500 mt-1">Adjusts brightness of checkerboard pixels to reveal colors vividly.</p>
                 </div>
 
                 <!-- Auto Line Art Slider -->
@@ -358,12 +346,13 @@
                     <span id="val-auto-lineart" class="text-brand-600 font-bold">0%</span>
                   </div>
                   <input type="range" id="slider-auto-lineart" min="0" max="100" step="1" value="0" class="w-full">
-                  <p class="text-[11px] text-slate-500 mt-1">Automatically detects image outlines and reveals line art before tap.</p>
+                  <p class="text-[10px] text-slate-500 mt-1">Automatically detects image outlines and reveals line art before tap.</p>
                 </div>
               </div>
 
-          </div>
+            </div>
 
+          </div>
         </div>
 
         <!-- STEP 3: Check the preview -->
