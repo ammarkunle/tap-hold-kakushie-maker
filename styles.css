@@ -161,7 +161,7 @@ html.dark nav a, html.dark label, html.dark strong, html.dark legend {
   color: #ffffff !important;
 }
 
-html.dark p, html.dark span:not(.text-brand-600):not(.text-emerald-700), html.dark figcaption {
+html.dark p, html.dark figcaption {
   color: #cbd5e1 !important;
 }
 
@@ -169,6 +169,7 @@ html.dark .card,
 html.dark #menu-theme,
 html.dark #menu-lang,
 html.dark .feature-card,
+html.dark .step-card,
 html.dark .faq-item,
 html.dark .rounded-2xl.border-slate-200 {
   background-color: #0f172a !important;
@@ -188,8 +189,8 @@ html.dark .hero-section {
 html.dark .bg-slate-50,
 html.dark .bg-slate-50\/50,
 html.dark .drop-zone {
-  background-color: #1e293b !important;
-  border-color: #334155 !important;
+  background-color: #131d31 !important;
+  border-color: #1e293b !important;
 }
 
 html.dark .drop-zone:hover {
@@ -197,20 +198,105 @@ html.dark .drop-zone:hover {
   border-color: #3b82f6 !important;
 }
 
+/* 1. White containers, pills, and backgrounds inside dark mode */
+html.dark .bg-white:not(.card):not(.card-before):not(.card-after):not(.tap-stage):not(.modal-content):not(#menu-theme):not(#menu-lang):not(.feature-card):not(.faq-item):not(.step-card) {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+/* 2. Hero Badges in Dark Mode */
+html.dark .hero-badge .bg-brand-50 {
+  background-color: rgba(30, 58, 138, 0.5) !important;
+  border-color: #2563eb !important;
+}
+html.dark .hero-badge .bg-brand-50 span,
+html.dark .hero-badge .bg-brand-50 svg {
+  color: #93c5fd !important;
+}
+
+html.dark .hero-badge .bg-emerald-50 {
+  background-color: rgba(6, 78, 59, 0.5) !important;
+  border-color: #059669 !important;
+}
+html.dark .hero-badge .bg-emerald-50 span,
+html.dark .hero-badge .bg-emerald-50 svg {
+  color: #6ee7b7 !important;
+}
+
+/* 3. Warning Callout (Posting Advice) in Dark Mode */
+html.dark .warning-callout {
+  background-color: rgba(30, 58, 138, 0.45) !important;
+  border-color: #2563eb !important;
+  color: #f8fafc !important;
+}
+html.dark .warning-callout div,
+html.dark .warning-callout strong,
+html.dark .warning-callout span {
+  color: #f8fafc !important;
+}
+html.dark .warning-callout svg {
+  color: #60a5fa !important;
+}
+
+/* 4. Brush Mode & Action Buttons in Dark Mode */
+html.dark .btn-mode.active {
+  background-color: #2563eb !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+html.dark .btn-mode:not(.active) {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+html.dark .btn-mode:not(.active):hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+html.dark #btn-reset-hidden,
+html.dark #btn-undo {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark #btn-reset-hidden:hover,
+html.dark #btn-undo:hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* 5. Mask Opacity Pill in Dark Mode Header */
+html.dark #val-mask-opacity,
+html.dark #brush-size-val,
+html.dark #val-brightness,
+html.dark #val-auto-lineart {
+  color: #60a5fa !important;
+}
+
+/* 6. Step Cards & Icons in Dark Mode */
+html.dark .step-icon,
+html.dark .feature-icon,
+html.dark .drop-icon {
+  background-color: #1e293b !important;
+  color: #60a5fa !important;
+}
+
+/* 7. Select & Accordion FAQ in Dark Mode */
 html.dark select {
   background-color: #1e293b !important;
   border-color: #475569 !important;
   color: #ffffff !important;
 }
 
-html.dark button.btn-secondary {
-  background-color: #1e293b !important;
-  color: #ffffff !important;
-  border-color: #475569 !important;
+html.dark .faq-question {
+  color: #f8fafc !important;
 }
-
-html.dark button.btn-secondary:hover {
-  background-color: #334155 !important;
+html.dark .faq-answer {
+  color: #cbd5e1 !important;
 }
 
 html.dark .opt-theme:hover,
