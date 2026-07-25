@@ -528,6 +528,96 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Navbar Dropdowns: Theme Mode & Language Selector ---
+  const btnThemeDropdown = document.getElementById('btn-theme-dropdown');
+  const menuTheme = document.getElementById('menu-theme');
+  const optThemes = document.querySelectorAll('.opt-theme');
+
+  const btnLangDropdown = document.getElementById('btn-lang-dropdown');
+  const menuLang = document.getElementById('menu-lang');
+  const optLangs = document.querySelectorAll('.opt-lang');
+
+  // Toggle Theme Menu
+  if (btnThemeDropdown && menuTheme) {
+    btnThemeDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (menuLang) menuLang.classList.add('hidden');
+      menuTheme.classList.toggle('hidden');
+    });
+
+    optThemes.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const selectedTheme = opt.getAttribute('data-theme');
+        applyThemeMode(selectedTheme);
+        menuTheme.classList.add('hidden');
+      });
+    });
+  }
+
+  // Toggle Language Menu
+  if (btnLangDropdown && menuLang) {
+    btnLangDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (menuTheme) menuTheme.classList.add('hidden');
+      menuLang.classList.toggle('hidden');
+    });
+
+    optLangs.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const selectedLang = opt.getAttribute('data-lang');
+        applyLanguage(selectedLang);
+        menuLang.classList.add('hidden');
+      });
+    });
+  }
+
+  // Close dropdowns on click outside
+  document.addEventListener('click', () => {
+    if (menuTheme) menuTheme.classList.add('hidden');
+    if (menuLang) menuLang.classList.add('hidden');
+  });
+
+  function applyThemeMode(theme) {
+    optThemes.forEach(opt => {
+      const t = opt.getAttribute('data-theme');
+      const check = opt.querySelector('.check-theme');
+      if (t === theme) {
+        opt.classList.add('active');
+        if (check) check.classList.remove('hidden');
+      } else {
+        opt.classList.remove('active');
+        if (check) check.classList.add('hidden');
+      }
+    });
+
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      // System
+      const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', isSystemDark);
+    }
+  }
+
+  function applyLanguage(lang) {
+    optLangs.forEach(opt => {
+      const l = opt.getAttribute('data-lang');
+      const check = opt.querySelector('.check-lang');
+      if (l === lang) {
+        opt.classList.add('active');
+        if (check) check.classList.remove('hidden');
+      } else {
+        opt.classList.remove('active');
+        if (check) check.classList.add('hidden');
+      }
+    });
+    document.documentElement.lang = lang;
+  }
+
   // --- Auto Line Art (Sobel Edge Detection) Algorithm ---
   function computeLineArtMask(threshold) {
     if (threshold <= 0 || !state.imgMain) return null;

@@ -110,14 +110,95 @@
         <span class="text-xl font-extrabold tracking-tight">Tap&Hold Kakushie Maker</span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8">
-        <a href="#tool" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Tool</a>
-        <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Features</a>
-        <a href="#how-it-works" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">How It Works</a>
-        <a href="#what-is" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">What Is</a>
-        <a href="#faq" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">FAQ</a>
-        <a href="#tool" class="btn btn-primary rounded-lg px-4 py-2 text-sm">Make Image</a>
-      </nav>
+      <div class="flex items-center gap-4">
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="#tool" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Tool</a>
+          <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Features</a>
+          <a href="#how-it-works" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">How It Works</a>
+          <a href="#what-is" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">What Is</a>
+          <a href="#faq" class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">FAQ</a>
+        </nav>
+
+        <!-- Navbar Icon Controls (Theme Mode Selector & Language Selector) -->
+        <div class="flex items-center gap-2.5">
+          
+          <!-- 1. Theme Mode Selector (Sun / Moon / System) -->
+          <div class="relative">
+            <button type="button" id="btn-theme-dropdown" aria-label="Select theme mode" class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all border border-slate-200 bg-slate-50/50 shadow-2xs">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            </button>
+
+            <!-- Theme Floating Dropdown Menu -->
+            <div id="menu-theme" class="hidden absolute right-0 top-full mt-2 w-40 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl z-50 space-y-1">
+              <button type="button" data-theme="light" class="opt-theme flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition-all">
+                <span class="flex items-center gap-2">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+                  Light
+                </span>
+                <span class="check-theme text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-theme="dark" class="opt-theme flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition-all">
+                <span class="flex items-center gap-2">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                  Dark
+                </span>
+                <span class="check-theme text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-theme="system" class="opt-theme active flex w-full items-center justify-between px-3 py-2 text-xs font-bold text-rose-500 hover:bg-slate-100 rounded-xl transition-all">
+                <span class="flex items-center gap-2">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                  System
+                </span>
+                <span class="check-theme text-rose-500 font-bold">✓</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Language Selector (Globe Icon -> 8 Languages) -->
+          <div class="relative">
+            <button type="button" id="btn-lang-dropdown" aria-label="Select language" class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all border border-slate-200 bg-slate-50/50 shadow-2xs">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            </button>
+
+            <!-- Language Floating Dropdown Menu -->
+            <div id="menu-lang" class="hidden absolute right-0 top-full mt-2 w-44 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl z-50 space-y-1">
+              <button type="button" data-lang="en" class="opt-lang active flex w-full items-center justify-between px-3 py-2 text-xs font-bold text-brand-600 hover:bg-slate-100 rounded-xl transition-all">
+                <span>English</span>
+                <span class="check-lang text-brand-600 font-bold">✓</span>
+              </button>
+              <button type="button" data-lang="es" class="opt-lang flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition-all">
+                <span>Español</span>
+                <span class="check-lang text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-lang="fr" class="opt-lang flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition-all">
+                <span>Français</span>
+                <span class="check-lang text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-lang="pt" class="opt-lang flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition-all">
+                <span>Português</span>
+                <span class="check-lang text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-lang="ja" class="opt-lang flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-all">
+                <span>日本語</span>
+                <span class="check-lang text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-lang="zh" class="opt-lang flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-all">
+                <span>中文</span>
+                <span class="check-lang text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-lang="ko" class="opt-lang flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-all">
+                <span>한국어</span>
+                <span class="check-lang text-brand-600 font-bold hidden">✓</span>
+              </button>
+              <button type="button" data-lang="ar" class="opt-lang flex w-full items-center justify-between px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-all">
+                <span>العربية</span>
+                <span class="check-lang text-brand-600 font-bold hidden">✓</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
   </header>
 
