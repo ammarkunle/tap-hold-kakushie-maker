@@ -139,31 +139,38 @@ input[type="checkbox"]:checked + .toggle-slider::before {
 }
 
 /* ==========================================================================
-   Dark Mode Support (Applied when .dark is present on <html>)
+   Dark Mode High-Contrast Support (Applied when .dark is present on <html>)
    ========================================================================== */
 html.dark {
   color-scheme: dark;
 }
 
 html.dark body {
-  background-color: #090d16 !important;
-  color: #f1f5f9 !important;
+  background-color: #070a12 !important;
+  color: #f8fafc !important;
 }
 
 html.dark header {
-  background-color: rgba(15, 23, 42, 0.88) !important;
+  background-color: rgba(15, 23, 42, 0.92) !important;
   border-color: #1e293b !important;
 }
 
 html.dark .brand-logo span,
-html.dark h1, html.dark h2, html.dark h3, html.dark h4,
-html.dark nav a {
-  color: #f8fafc !important;
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5,
+html.dark nav a, html.dark label, html.dark strong, html.dark legend {
+  color: #ffffff !important;
+}
+
+html.dark p, html.dark span:not(.text-brand-600):not(.text-emerald-700), html.dark figcaption {
+  color: #cbd5e1 !important;
 }
 
 html.dark .card,
 html.dark #menu-theme,
-html.dark #menu-lang {
+html.dark #menu-lang,
+html.dark .feature-card,
+html.dark .faq-item,
+html.dark .rounded-2xl.border-slate-200 {
   background-color: #0f172a !important;
   border-color: #1e293b !important;
   color: #f8fafc !important;
@@ -175,34 +182,56 @@ html.dark #how-it-works,
 html.dark #what-is,
 html.dark #faq,
 html.dark .hero-section {
-  background-color: #090d16 !important;
+  background-color: #070a12 !important;
 }
 
 html.dark .bg-slate-50,
-html.dark .bg-slate-50\/50 {
+html.dark .bg-slate-50\/50,
+html.dark .drop-zone {
   background-color: #1e293b !important;
   border-color: #334155 !important;
 }
 
-html.dark .text-slate-900,
-html.dark .text-slate-800,
-html.dark .text-slate-700 {
-  color: #f8fafc !important;
+html.dark .drop-zone:hover {
+  background-color: #1e3a8a/40 !important;
+  border-color: #3b82f6 !important;
 }
 
-html.dark .text-slate-600,
-html.dark .text-slate-500 {
-  color: #94a3b8 !important;
-}
-
-html.dark select,
-html.dark input[type="range"] {
+html.dark select {
   background-color: #1e293b !important;
-  border-color: #334155 !important;
-  color: #f8fafc !important;
+  border-color: #475569 !important;
+  color: #ffffff !important;
+}
+
+html.dark button.btn-secondary {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+html.dark button.btn-secondary:hover {
+  background-color: #334155 !important;
 }
 
 html.dark .opt-theme:hover,
 html.dark .opt-lang:hover {
   background-color: #1e293b !important;
+}
+
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700 {
+  color: #ffffff !important;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500,
+html.dark .text-slate-400 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .modal-content {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
 }

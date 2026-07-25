@@ -275,15 +275,15 @@
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-10">
         
         <div class="mx-auto max-w-3xl text-center">
-          <h2 class="section-title text-3xl font-extrabold text-slate-900 sm:text-4xl">Create your tap to reveal image</h2>
-          <p class="section-subtitle mt-3 text-lg text-slate-600">Follow the 4 simple steps below to craft your hidden image illusion.</p>
+          <h2 data-i18n="secToolTitle" class="section-title text-3xl font-extrabold text-slate-900 sm:text-4xl">Create your tap to reveal image</h2>
+          <p data-i18n="secToolSubtitle" class="section-subtitle mt-3 text-lg text-slate-600">Follow the 4 simple steps below to craft your hidden image illusion.</p>
         </div>
 
         <!-- STEP 1: Choose an image -->
         <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
             <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">1</span>
-            <h3 class="text-xl font-bold text-slate-900">Choose an image</h3>
+            <h3 data-i18n="step1Title" class="text-xl font-bold text-slate-900">Choose an image</h3>
           </div>
 
           <div class="drop-zone border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-brand-50 hover:border-brand-400 rounded-2xl p-8 text-center cursor-pointer transition-all relative" id="drop-zone-main">
@@ -292,8 +292,8 @@
               <div class="drop-icon mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-100 text-brand-600 mb-3">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               </div>
-              <h4 class="text-base font-bold text-slate-900">Drop your image here</h4>
-              <p class="mt-1 text-xs text-slate-500">or click to browse. Supports JPG, PNG, WebP up to 40MB.</p>
+              <h4 data-i18n="dropTitle" class="text-base font-bold text-slate-900">Drop your image here</h4>
+              <p data-i18n="dropDesc" class="mt-1 text-xs text-slate-500">or click to browse. Supports JPG, PNG, WebP up to 40MB.</p>
             </div>
             <div class="upload-preview hidden relative w-full max-w-xs mx-auto h-48 rounded-xl overflow-hidden bg-black flex items-center justify-center" id="preview-wrapper-main">
               <img id="thumb-main" src="" alt="Uploaded image" class="max-w-full max-h-full object-contain">
@@ -306,9 +306,9 @@
           <div class="flex flex-col gap-1 border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3">
               <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">2</span>
-              <h3 class="text-xl font-bold text-slate-900">Adjust how it hides</h3>
+              <h3 data-i18n="step2Title" class="text-xl font-bold text-slate-900">Adjust how it hides</h3>
             </div>
-            <p class="text-xs text-slate-500 pl-11">At first the whole picture is hidden before tap. Paint over just the areas you want visible before tap on the canvas below.</p>
+            <p data-i18n="step2Subtitle" class="text-xs text-slate-500 pl-11">At first the whole picture is hidden before tap. Paint over just the areas you want visible before tap on the canvas below.</p>
           </div>
 
           <!-- 2-Column Responsive Layout: Left (Combined Canvas & Brush Editing) / Right (Output Size & Image Adjustments) -->
@@ -321,10 +321,10 @@
                 <!-- Card Header with Mask Opacity Slider RIGHT ABOVE CANVAS -->
                 <div class="flex items-center justify-between border-b border-slate-200/60 pb-3 flex-wrap gap-2">
                   <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
-                    <span class="text-brand-600 text-base">•••</span> Editing canvas
+                    <span class="text-brand-600 text-base">•••</span> <span data-i18n="cardCanvasTitle">Editing canvas</span>
                   </div>
                   <div class="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
-                    <span>Mask opacity</span>
+                    <span data-i18n="maskOpacityLabel">Mask opacity</span>
                     <span id="val-mask-opacity" class="text-brand-600 font-bold min-w-[28px]">35%</span>
                     <input type="range" id="slider-mask-opacity" min="0" max="100" value="35" class="w-20 sm:w-28">
                   </div>
@@ -337,7 +337,7 @@
                   <!-- Circular Ring Cursor Ring (Absolute inside wrapper-edit) -->
                   <div id="brush-cursor" class="pointer-events-none absolute z-30 rounded-full border-2 border-brand-500 bg-brand-500/25 shadow-md hidden -translate-x-1/2 -translate-y-1/2"></div>
                   
-                  <div class="placeholder-text absolute inset-0 flex items-center justify-center p-4 text-center text-xs font-medium text-slate-400 pointer-events-none z-0" id="placeholder-edit">
+                  <div data-i18n="placeholderEdit" class="placeholder-text absolute inset-0 flex items-center justify-center p-4 text-center text-xs font-medium text-slate-400 pointer-events-none z-0" id="placeholder-edit">
                     Upload an image in Step 1 to start painting
                   </div>
                 </div>
@@ -350,10 +350,10 @@
 
                   <!-- Mode Buttons -->
                   <div class="grid grid-cols-2 gap-2">
-                    <button class="btn-mode active flex items-center justify-center py-2 px-3 text-xs font-bold rounded-xl border border-brand-500 bg-brand-50 text-brand-700 transition-all" id="btn-show-before-tap">
+                    <button data-i18n="btnShowBeforeTap" class="btn-mode active flex items-center justify-center py-2 px-3 text-xs font-bold rounded-xl border border-brand-500 bg-brand-50 text-brand-700 transition-all" id="btn-show-before-tap">
                       Show before tap
                     </button>
-                    <button class="btn-mode flex items-center justify-center py-2 px-3 text-xs font-semibold rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-all" id="btn-hide-before-tap">
+                    <button data-i18n="btnHideBeforeTap" class="btn-mode flex items-center justify-center py-2 px-3 text-xs font-semibold rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-all" id="btn-hide-before-tap">
                       Hide before tap
                     </button>
                   </div>
@@ -361,7 +361,7 @@
                   <!-- Brush Size Slider (25px to 150px, default 50px) -->
                   <div>
                     <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                      <span>Brush size</span>
+                      <span data-i18n="brushSizeLabel">Brush size</span>
                       <span id="brush-size-val" class="text-brand-600 font-bold">50px</span>
                     </div>
                     <input type="range" id="brush-size" min="25" max="150" value="50" class="w-full">
@@ -369,10 +369,10 @@
 
                   <!-- Action Buttons Side by Side -->
                   <div class="grid grid-cols-2 gap-2 pt-1">
-                    <button class="btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2 text-xs font-bold rounded-xl transition-all shadow-2xs" id="btn-reset-hidden">
+                    <button data-i18n="btnReset" class="btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2 text-xs font-bold rounded-xl transition-all shadow-2xs" id="btn-reset-hidden">
                       Reset to "hidden"
                     </button>
-                    <button class="btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2 text-xs font-bold rounded-xl transition-all shadow-2xs disabled:opacity-50" id="btn-undo">
+                    <button data-i18n="btnUndo" class="btn border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 py-2 text-xs font-bold rounded-xl transition-all shadow-2xs disabled:opacity-50" id="btn-undo">
                       Undo
                     </button>
                   </div>
@@ -387,7 +387,7 @@
               <!-- Card 1: Output Size Card -->
               <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-4 sm:p-5 space-y-3 shadow-sm">
                 <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
-                  <span class="text-brand-600 text-base">•••</span> Output size
+                  <span class="text-brand-600 text-base">•••</span> <span data-i18n="cardOutputSizeTitle">Output size</span>
                 </div>
 
                 <select id="select-aspect" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none shadow-2xs">
@@ -400,7 +400,7 @@
                   <option value="landscape3x2">Landscape 3:2 — 2432×1621</option>
                 </select>
 
-                <p class="text-[11px] text-slate-500 leading-relaxed">
+                <p data-i18n="outputSizeHint" class="text-[11px] text-slate-500 leading-relaxed">
                   Keeps the original aspect ratio, auto-adjusted to stay hidden on mobile.
                 </p>
               </div>
@@ -408,27 +408,27 @@
               <!-- Card 2: Image Adjustments Card (Brightness Boost & Auto Line Art) -->
               <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-4 sm:p-5 space-y-4 shadow-sm">
                 <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
-                  <span class="text-brand-600 text-base">•••</span> Image Adjustments
+                  <span class="text-brand-600 text-base">•••</span> <span data-i18n="cardAdjustmentsTitle">Image Adjustments</span>
                 </div>
 
                 <!-- Brightness Boost Slider -->
                 <div>
                   <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                    <span>Brightness Boost</span>
+                    <span data-i18n="valBrightnessLabel">Brightness Boost</span>
                     <span id="val-brightness" class="text-brand-600 font-bold">0</span>
                   </div>
                   <input type="range" id="slider-brightness" min="-50" max="50" step="2" value="0" class="w-full">
-                  <p class="text-[10px] text-slate-500 mt-1">Adjusts brightness of checkerboard pixels to reveal colors vividly.</p>
+                  <p data-i18n="brightnessHint" class="text-[10px] text-slate-500 mt-1">Adjusts brightness of checkerboard pixels to reveal colors vividly.</p>
                 </div>
 
                 <!-- Auto Line Art Slider -->
                 <div>
                   <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                    <span>Auto line art</span>
+                    <span data-i18n="valAutoLineArtLabel">Auto line art</span>
                     <span id="val-auto-lineart" class="text-brand-600 font-bold">0%</span>
                   </div>
                   <input type="range" id="slider-auto-lineart" min="0" max="100" step="1" value="0" class="w-full">
-                  <p class="text-[10px] text-slate-500 mt-1">Automatically detects image outlines and reveals line art before tap.</p>
+                  <p data-i18n="autoLineArtHint" class="text-[10px] text-slate-500 mt-1">Automatically detects image outlines and reveals line art before tap.</p>
                 </div>
               </div>
 
@@ -442,7 +442,7 @@
           <div class="flex items-center justify-between border-b border-slate-100 pb-4 flex-wrap gap-3">
             <div class="flex items-center gap-3">
               <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">3</span>
-              <h3 class="text-xl font-bold text-slate-900">Check the preview</h3>
+              <h3 data-i18n="step3Title" class="text-xl font-bold text-slate-900">Check the preview</h3>
             </div>
 
             <!-- Timeline Theme Toggle Pill (Light TL / Dark TL - Blue Palette) -->
@@ -462,21 +462,21 @@
               <canvas id="output-canvas" width="800" height="450" class="w-full h-full block object-contain relative z-10"></canvas>
               
               <!-- Placeholder text when no image loaded -->
-              <div class="placeholder-text absolute inset-0 flex items-center justify-center p-4 text-center text-xs font-medium text-slate-400 pointer-events-none z-0" id="placeholder-out">
+              <div data-i18n="placeholderOut" class="placeholder-text absolute inset-0 flex items-center justify-center p-4 text-center text-xs font-medium text-slate-400 pointer-events-none z-0" id="placeholder-out">
                 Tap &amp; hold stage to simulate background reveal
               </div>
 
               <div class="tap-overlay absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none transition-opacity duration-150 z-20" id="tap-overlay">
                 <div class="tap-instruction-badge flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-full text-[10px] font-bold tracking-wider shadow-lg whitespace-nowrap">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>
-                  <span>TAP &amp; HOLD TO SEE THE MAGIC</span>
+                  <span data-i18n="stageOverlayText">TAP &amp; HOLD TO SEE THE MAGIC</span>
                 </div>
               </div>
             </div>
 
             <div class="stage-info flex items-center justify-between mt-2.5 px-1 text-[11px] text-slate-500 font-medium">
               <span id="bg-indicator">State: <strong class="text-brand-600">Timeline (White BG)</strong></span>
-              <span>Hold stage to test reveal</span>
+              <span data-i18n="stageInfoHint">Hold stage to test reveal</span>
             </div>
           </div>
 
@@ -486,19 +486,19 @@
         <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
             <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white font-bold text-sm">4</span>
-            <h3 class="text-xl font-bold text-slate-900">Export</h3>
+            <h3 data-i18n="step4Title" class="text-xl font-bold text-slate-900">Export</h3>
           </div>
 
           <div class="warning-callout rounded-xl border border-brand-200 bg-brand-50/70 p-4 flex gap-3 text-xs leading-relaxed text-brand-900">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-600 flex-shrink-0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             <div>
-              <strong>Posting Advice:</strong> Post this image on x.com only from a desktop browser. Do not use the X mobile app &mdash; Posting from the mobile app converts the image to JPEG and destroys the trick.
+              <strong data-i18n="adviceLabel">Posting Advice:</strong> <span data-i18n="adviceText">Post this image on x.com only from a desktop browser. Do not use the X mobile app &mdash; Posting from the mobile app converts the image to JPEG and destroys the trick.</span>
             </div>
           </div>
 
           <button class="btn btn-primary w-full max-w-md mx-auto rounded-xl py-4 text-base font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20" id="btn-export">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download Hidden PNG
+            <span data-i18n="btnExportText">Download Hidden PNG</span>
           </button>
         </div>
 
