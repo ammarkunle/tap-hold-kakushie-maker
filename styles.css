@@ -137,3 +137,72 @@ input[type="checkbox"]:checked + .toggle-slider::before {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(1.2); }
 }
+
+/* ==========================================================================
+   Dark Mode Support (Applied when .dark is present on <html>)
+   ========================================================================== */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #090d16 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark header {
+  background-color: rgba(15, 23, 42, 0.88) !important;
+  border-color: #1e293b !important;
+}
+
+html.dark .brand-logo span,
+html.dark h1, html.dark h2, html.dark h3, html.dark h4,
+html.dark nav a {
+  color: #f8fafc !important;
+}
+
+html.dark .card,
+html.dark #menu-theme,
+html.dark #menu-lang {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+html.dark #tool,
+html.dark #features,
+html.dark #how-it-works,
+html.dark #what-is,
+html.dark #faq,
+html.dark .hero-section {
+  background-color: #090d16 !important;
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-slate-50\/50 {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark select,
+html.dark input[type="range"] {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .opt-theme:hover,
+html.dark .opt-lang:hover {
+  background-color: #1e293b !important;
+}
