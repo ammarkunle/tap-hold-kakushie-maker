@@ -221,7 +221,7 @@
           </div>
         </div>
 
-        <!-- STEP 2: Adjust how it hides (Redesigned 2-Column Box Layout) -->
+        <!-- STEP 2: Adjust how it hides (Reorganized Card Layout) -->
         <div class="card bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <div class="flex flex-col gap-1 border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3">
@@ -231,34 +231,49 @@
             <p class="text-xs text-slate-500 pl-11">At first the whole picture is hidden before tap. Paint over just the areas you want visible before tap on the canvas below.</p>
           </div>
 
-          <!-- 2-Column Grid: Left Controls (Output size & Brush editing) / Right Editing canvas & Sliders -->
+          <!-- 2-Column Responsive Layout: Left (Editing Canvas Card) / Right (Controls Stack) -->
           <div class="grid gap-6 md:grid-cols-12 items-start">
             
-            <!-- Left Column: Separate Output Size Box & Brush Editing Box (5 cols) -->
-            <div class="md:col-span-5 space-y-6">
-              
-              <!-- Box 1: Output size -->
-              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-3">
-                <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
-                  <span class="text-brand-600 text-base">•••</span> Output size
+            <!-- Left Column (Desktop 7 cols / Mobile Top): 1. Editing Canvas Card (First Element) -->
+            <div class="md:col-span-7">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+                  <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
+                    <span class="text-brand-600 text-base">•••</span> Editing canvas
+                  </div>
+                  <span class="text-[11px] font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
+                    Active Editor
+                  </span>
                 </div>
 
-                <select id="select-aspect" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none shadow-sm">
-                  <option value="auto" selected>Auto (original aspect ratio, recommended)</option>
-                  <option value="square">Square 1:1 — 2432×2432</option>
-                  <option value="portrait2x3">Portrait 2:3 — 1664×2432</option>
-                  <option value="portrait4x5">Portrait 4:5 — 1946×2432</option>
-                  <option value="portrait9x16">Portrait 9:16 — 1368×2432</option>
-                  <option value="landscape16x9">Landscape 16:9 — 2432×1368</option>
-                  <option value="landscape3x2">Landscape 3:2 — 2432×1621</option>
-                </select>
+                <!-- Interactive Editor Wrapper -->
+                <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-slate-900 shadow-inner flex items-center justify-center cursor-crosshair border border-slate-300" id="wrapper-edit">
+                  <canvas id="edit-canvas" width="800" height="450" class="w-full h-full block object-contain relative z-10"></canvas>
+                  
+                  <!-- Circular Ring Cursor -->
+                  <div id="brush-cursor" class="pointer-events-none fixed z-50 rounded-full border-2 border-brand-500 bg-brand-500/20 shadow-sm hidden -translate-x-1/2 -translate-y-1/2"></div>
+                  
+                  <div class="placeholder-text absolute inset-0 flex items-center justify-center p-4 text-center text-xs font-medium text-slate-400 pointer-events-none z-0" id="placeholder-edit">
+                    Upload an image in Step 1 to start painting
+                  </div>
+                </div>
 
-                <p class="text-[11px] text-slate-500 leading-relaxed">
-                  Keeps the original aspect ratio, auto-adjusted to a size that stays hidden even on phones. Before an image is loaded, the placeholder is portrait 1664×2432.
-                </p>
+                <!-- Display-Only Red Mask Opacity Control -->
+                <div class="pt-2 border-t border-slate-200/60">
+                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    <span>Mask Overlay Opacity (Display only)</span>
+                    <span id="val-mask-opacity" class="text-brand-600 font-bold">35%</span>
+                  </div>
+                  <input type="range" id="slider-mask-opacity" min="0" max="100" value="35" class="w-full">
+                  <p class="text-[10px] text-slate-400 mt-1">Adjusts the red mask transparency in the editor. Does not affect final PNG export.</p>
+                </div>
               </div>
+            </div>
 
-              <!-- Box 2: Brush editing -->
+            <!-- Right Column (Desktop 5 cols / Mobile Bottom): Stacked Controls in Exact Requested Order -->
+            <div class="md:col-span-5 space-y-6">
+              
+              <!-- Card 2: Brush Editing Card -->
               <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
                 <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
                   <span class="text-brand-600 text-base">•••</span> Brush editing
@@ -280,13 +295,13 @@
                   </p>
                 </div>
 
-                <!-- Brush Size Slider -->
+                <!-- Brush Size Slider (50px to 200px) -->
                 <div>
                   <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
                     <span>Brush size</span>
-                    <span id="brush-size-val" class="text-brand-600">32px</span>
+                    <span id="brush-size-val" class="text-brand-600 font-bold">100px</span>
                   </div>
-                  <input type="range" id="brush-size" min="5" max="80" value="32" class="w-full">
+                  <input type="range" id="brush-size" min="50" max="200" value="100" class="w-full">
                 </div>
 
                 <!-- Reset and Undo Action Buttons -->
@@ -298,71 +313,54 @@
                     Undo
                   </button>
                 </div>
-
               </div>
-
-            </div>
-
-            <!-- Right Column: Editing canvas Box + Stacked Sliders (7 cols) -->
-            <div class="md:col-span-7">
-              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-5">
-                
-                <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
-                  <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
-                    <span class="text-brand-600 text-base">•••</span> Editing canvas
-                  </div>
-                  <div class="flex items-center gap-2 text-xs font-semibold text-slate-700">
-                    <span>Mask opacity</span>
-                    <span id="val-mask-opacity" class="text-brand-600">35%</span>
-                  </div>
+              <!-- Card 3: Output Size Card -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-3">
+                <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
+                  <span class="text-brand-600 text-base">•••</span> Output size
                 </div>
 
-                <!-- Mask Opacity Slider -->
+                <select id="select-aspect" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none shadow-sm">
+                  <option value="auto" selected>Auto (original aspect ratio, recommended)</option>
+                  <option value="square">Square 1:1 — 2432×2432</option>
+                  <option value="portrait2x3">Portrait 2:3 — 1664×2432</option>
+                  <option value="portrait4x5">Portrait 4:5 — 1946×2432</option>
+                  <option value="portrait9x16">Portrait 9:16 — 1368×2432</option>
+                  <option value="landscape16x9">Landscape 16:9 — 2432×1368</option>
+                  <option value="landscape3x2">Landscape 3:2 — 2432×1621</option>
+                </select>
+
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                  Keeps the original aspect ratio, auto-adjusted to a size that stays hidden even on phones.
+                </p>
+              </div>
+
+              <!-- Card 4 (Last Card in Section 2): Adjustments Card (Brightness Boost & Auto Line Art) -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
+                <div class="flex items-center gap-2 font-bold text-sm text-slate-900">
+                  <span class="text-brand-600 text-base">•••</span> Image Adjustments
+                </div>
+
+                <!-- Brightness Boost Slider -->
                 <div>
-                  <input type="range" id="slider-mask-opacity" min="0" max="100" value="35" class="w-full">
-                  <p class="text-[11px] text-slate-400 mt-1">Display-only setting. It does not affect the exported image.</p>
+                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    <span>Brightness Boost</span>
+                    <span id="val-brightness" class="text-brand-600 font-bold">0</span>
+                  </div>
+                  <input type="range" id="slider-brightness" min="-50" max="50" step="2" value="0" class="w-full">
+                  <p class="text-[11px] text-slate-500 mt-1">Adjusts brightness of checkerboard pixels to reveal colors vividly.</p>
                 </div>
 
-                <!-- Canvas Wrapper Frame -->
-                <div class="canvas-wrapper relative w-full aspect-[16/9] rounded-2xl overflow-hidden border-2 border-slate-300 checkerboard-bg flex items-center justify-center shadow-sm" id="wrapper-edit">
-                  <canvas id="edit-canvas" width="800" height="450" class="w-full h-full block cursor-none object-contain relative z-10"></canvas>
-                  
-                  <!-- Circular Brush Cursor Ring Indicator -->
-                  <div id="brush-cursor" class="pointer-events-none absolute rounded-full border-2 border-white shadow-[0_0_6px_rgba(0,0,0,0.6)] hidden z-30 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-
-                  <!-- Placeholder text when no image loaded -->
-                  <div class="placeholder-text absolute inset-0 flex items-center justify-center p-6 text-center text-sm font-medium text-slate-400 pointer-events-none z-0" id="placeholder-edit">
-                    Load an image to brush-edit which areas are hidden or always visible here.
+                <!-- Auto Line Art Slider -->
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    <span>Auto line art</span>
+                    <span id="val-auto-lineart" class="text-brand-600 font-bold">0%</span>
                   </div>
-
-                  <div class="canvas-paint-hint absolute bottom-3 left-3 bg-slate-900/85 backdrop-blur-sm text-white px-3.5 py-1.5 rounded-full text-xs font-semibold pointer-events-none flex items-center gap-1.5 shadow-md z-20">
-                    🎨 <span>Paint image areas to keep visible before tap</span>
-                  </div>
+                  <input type="range" id="slider-auto-lineart" min="0" max="100" step="1" value="0" class="w-full">
+                  <p class="text-[11px] text-slate-500 mt-1">Automatically detects image outlines and reveals line art before tap.</p>
                 </div>
-
-                <!-- Stacked Sliders: Before Tap Faintness & Brightness Boost (Right under Editing Canvas frame) -->
-                <div class="space-y-4 pt-3 border-t border-slate-200/60">
-                  <div>
-                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                      <span>Before Tap Faintness</span>
-                      <span id="val-before-tap" class="text-brand-600">0.00</span>
-                    </div>
-                    <input type="range" id="slider-before-tap" min="0.0" max="0.3" step="0.01" value="0.0" class="w-full">
-                    <p class="text-[11px] text-slate-400 mt-1">Controls how faintly unpainted parts appear in the timeline preview.</p>
-                  </div>
-
-                  <div>
-                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                      <span>Brightness Boost</span>
-                      <span id="val-brightness" class="text-brand-600">0</span>
-                    </div>
-                    <input type="range" id="slider-brightness" min="-50" max="50" step="2" value="0" class="w-full">
-                    <p class="text-[11px] text-slate-400 mt-1">Compensate for darker look when expanded on dark lightbox.</p>
-                  </div>
-                </div>
-
               </div>
-            </div>
 
           </div>
 

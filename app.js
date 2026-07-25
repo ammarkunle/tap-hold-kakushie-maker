@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     aspect: 'auto',
     previewBg: 'light', // 'light' (White TL) | 'dark' (Black TL)
     isHolding: false,
-    beforeTapFaintness: 0.0,
+    autoLineArt: 0, // 0 to 100%
     brightness: 0,
     maskOpacity: 0.35, // Display-only red mask overlay opacity
     
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Brush Tool State for Mask
     isDrawing: false,
-    brushSize: 32,
+    brushSize: 100, // Range 50px to 200px
     tool: 'brush', // 'brush' (Show before tap) | 'eraser' (Hide before tap)
     strokePoints: [],
     lastMidPoint: null,
@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const sliderMaskOpacity = document.getElementById('slider-mask-opacity');
   const valMaskOpacity = document.getElementById('val-mask-opacity');
 
-  const sliderBeforeTap = document.getElementById('slider-before-tap');
-  const valBeforeTap = document.getElementById('val-before-tap');
+  const sliderAutoLineArt = document.getElementById('slider-auto-lineart');
+  const valAutoLineArt = document.getElementById('val-auto-lineart');
   const sliderBrightness = document.getElementById('slider-brightness');
   const valBrightness = document.getElementById('val-brightness');
 
@@ -274,11 +274,13 @@ document.addEventListener('DOMContentLoaded', () => {
     renderEditCanvasFast();
   });
 
-  sliderBeforeTap.addEventListener('input', e => {
-    state.beforeTapFaintness = parseFloat(e.target.value);
-    valBeforeTap.textContent = state.beforeTapFaintness.toFixed(2);
-    renderOutputCanvas();
-  });
+  if (sliderAutoLineArt) {
+    sliderAutoLineArt.addEventListener('input', e => {
+      state.autoLineArt = parseInt(e.target.value, 10);
+      valAutoLineArt.textContent = `${state.autoLineArt}%`;
+      renderAll();
+    });
+  }
 
   sliderBrightness.addEventListener('input', e => {
     state.brightness = parseInt(e.target.value, 10);
@@ -521,6 +523,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Auto Line Art (Sobel Edge Detection) Algorithm ---
+  function computeLineArtMask(threshold) {
+    if (threshold <= 0 || !state.imgMain) return null;
+    const w = width;
+    const h = height;
+
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = w;
+    tempCanvas.height = h;
+    const tempCtx = tempCanvas.getContext('2d');
+    drawCover(tempCtx, state.imgMain, w, h);
+
+    const imgData = tempCtx.getImageData(0, 0, w, h);
+    const data = imgData.data;
+
+    const gray = new Uint8Array(w * h);
+    for (let i = 0; i < w * h; i++) {
+      const p = i * 4;
+      gray[i] = (data[p] * 299 + data[p + 1] * 587 + data[p + 2] * 114) / 1000;
+    }
+
+    const lineArt = new Uint8Array(w * h);
+    const sensThreshold = Math.max(15, 230 - (threshold * 2.1));
+
+    for (let y = 1; y < h - 1; y++) {
+      const row = y * w;
+      for (let x = 1; x < w - 1; x++) {
+        const idx = row + x;
+        const gx = -gray[idx - w - 1] + gray[idx - w + 1] - 2 * gray[idx - 1] + 2 * gray[idx + 1] - gray[idx + w - 1] + gray[idx + w + 1];
+        const gy = -gray[idx - w - 1] - 2 * gray[idx - w] - gray[idx - w + 1] + gray[idx + w - 1] + 2 * gray[idx + w] + gray[idx + w + 1];
+        if (Math.abs(gx) + Math.abs(gy) >= sensThreshold) {
+          lineArt[idx] = 1;
+        }
+      }
+    }
+    return lineArt;
+  }
+
   // --- High-Performance Rendering Pipelines ---
   
   // 1. Ultra-Fast GPU Composite for Active Brush Editing Canvas (< 0.2ms per frame!)
@@ -550,6 +590,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Draw composited red mask onto edit canvas
     ctxEdit.globalCompositeOperation = 'source-over';
     ctxEdit.drawImage(overlayCanvas, 0, 0);
+
+    // Draw Auto Line Art outline overlay onto edit canvas
+    if (state.autoLineArt > 0) {
+      const lineArtMask = computeLineArtMask(state.autoLineArt);
+      if (lineArtMask) {
+        const lineImg = ctxEdit.createImageData(width, height);
+        for (let i = 0; i < width * height; i++) {
+          if (lineArtMask[i] === 1) {
+            const p = i * 4;
+            lineImg.data[p] = 59;     // Cyan / Brand blue outline
+            lineImg.data[p + 1] = 130;
+            lineImg.data[p + 2] = 246;
+            lineImg.data[p + 3] = 220;
+          }
+        }
+        const tempLineC = document.createElement('canvas');
+        tempLineC.width = width;
+        tempLineC.height = height;
+        tempLineC.getContext('2d').putImageData(lineImg, 0, 0);
+        ctxEdit.drawImage(tempLineC, 0, 0);
+      }
+    }
   }
 
   // 2. Official Kakushie Maker Engine with Exact Solid Timeline Simulation (Light TL vs Dark TL)
@@ -571,10 +633,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const totalPixels = width * height;
     
-    // Effective mask: 1 = Hidden (unpainted), 0 = Revealed (brushed)
+    // Auto Line Art Mask calculation
+    const lineArtMask = (state.autoLineArt > 0) ? computeLineArtMask(state.autoLineArt) : null;
+
+    // Effective mask: 1 = Hidden (unpainted), 0 = Revealed (brushed or auto line art)
     const maskEffective = new Uint8Array(totalPixels);
     for (let i = 0; i < totalPixels; i++) {
-      const isBrushed = maskData.data[i * 4 + 3] > 0;
+      const isBrushed = (maskData.data[i * 4 + 3] > 0) || (lineArtMask && lineArtMask[i] === 1);
       maskEffective[i] = isBrushed ? 0 : 1;
     }
 
