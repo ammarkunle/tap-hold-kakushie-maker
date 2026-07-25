@@ -1,6 +1,6 @@
 {
-  "name": "Tap&Hold Kakushie Maker",
-  "short_name": "TapHold",
+  "name": "Tap And Hold Kakushie Maker",
+  "short_name": "TapAndHold",
   "description": "Create X / Twitter Tap and Hold hidden image illusions in seconds. 100% free and client-side private.",
   "start_url": "./index.html",
   "display": "standalone",
