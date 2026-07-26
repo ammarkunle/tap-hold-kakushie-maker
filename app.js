@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     previewBg: 'light', // 'light' (White TL) | 'dark' (Black TL)
     isHolding: false,
     autoLineArt: 0, // 0 to 100%
-    brightness: 0,
+    brightness: 1.5,
     maskOpacity: 0.35, // Display-only red mask overlay opacity
     
     // Raw output buffer stored exclusively for PNG-8 export
@@ -283,8 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   sliderBrightness.addEventListener('input', e => {
-    state.brightness = parseInt(e.target.value, 10);
-    valBrightness.textContent = state.brightness;
+    state.brightness = parseFloat(e.target.value);
+    valBrightness.textContent = `×${state.brightness.toFixed(1)}`;
     renderOutputCanvas();
   });
 
@@ -1711,8 +1711,8 @@ document.addEventListener('DOMContentLoaded', () => {
       maskEffective[i] = isBrushed ? 0 : 1;
     }
 
-    // 2. Brightness Boost (Default 1.5x for checkerboard pixels)
-    const boostFactor = state.brightness !== 0 ? Math.max(0.1, 1.0 + state.brightness / 50.0) : 1.5;
+    // 2. Brightness Boost (Multiplier from x1.0 to x2.0, default 1.5x for checkerboard pixels)
+    const boostFactor = typeof state.brightness === 'number' ? state.brightness : 1.5;
     
     const boostedData = new Uint8ClampedArray(dataB.data.length);
     for (let s = 0; s < totalPixels; s++) {
