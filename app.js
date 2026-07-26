@@ -1878,7 +1878,16 @@ document.addEventListener('DOMContentLoaded', () => {
           link.click();
           document.body.removeChild(link);
         } else {
-          const dataURL = outputCanvas.toDataURL('image/png');
+          // Offscreen export canvas guarantees raw 1-pixel checkerboard transparency fallback
+          const rawCanvas = document.createElement('canvas');
+          rawCanvas.width = width;
+          rawCanvas.height = height;
+          const rawCtx = rawCanvas.getContext('2d');
+          const rawImgData = rawCtx.createImageData(width, height);
+          rawImgData.data.set(state.currentRawRgba);
+          rawCtx.putImageData(rawImgData, 0, 0);
+
+          const dataURL = rawCanvas.toDataURL('image/png');
           const link = document.createElement('a');
           link.download = 'tap-hold-kakushie.png';
           link.href = dataURL;
