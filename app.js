@@ -528,6 +528,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Download Feedback & Share Modal Logic ---
+  const modalDlFeedback = document.getElementById('modal-download-feedback');
+  const closeDlFeedback = document.getElementById('close-dl-feedback');
+  const dlStage1 = document.getElementById('dl-stage-1');
+  const dlStageShare = document.getElementById('dl-stage-share');
+  const dlStageTips = document.getElementById('dl-stage-tips');
+
+  const btnDlLove = document.getElementById('btn-dl-love');
+  const btnDlNotQuite = document.getElementById('btn-dl-notquite');
+  const btnCloseShare = document.getElementById('btn-close-share');
+  const btnCloseTips = document.getElementById('btn-close-tips');
+
+  function openDownloadFeedbackModal() {
+    if (!modalDlFeedback) return;
+    if (dlStage1) dlStage1.classList.remove('hidden');
+    if (dlStageShare) dlStageShare.classList.add('hidden');
+    if (dlStageTips) dlStageTips.classList.add('hidden');
+    modalDlFeedback.classList.remove('hidden');
+  }
+
+  function closeDownloadFeedbackModal() {
+    if (modalDlFeedback) modalDlFeedback.classList.add('hidden');
+  }
+
+  if (closeDlFeedback) closeDlFeedback.addEventListener('click', closeDownloadFeedbackModal);
+  if (btnCloseShare) btnCloseShare.addEventListener('click', closeDownloadFeedbackModal);
+  if (btnCloseTips) btnCloseTips.addEventListener('click', closeDownloadFeedbackModal);
+
+  if (modalDlFeedback) {
+    modalDlFeedback.addEventListener('click', (e) => {
+      if (e.target === modalDlFeedback) closeDownloadFeedbackModal();
+    });
+  }
+
+  if (btnDlLove) {
+    btnDlLove.addEventListener('click', () => {
+      if (dlStage1) dlStage1.classList.add('hidden');
+      if (dlStageShare) dlStageShare.classList.remove('hidden');
+    });
+  }
+
+  if (btnDlNotQuite) {
+    btnDlNotQuite.addEventListener('click', () => {
+      if (dlStage1) dlStage1.classList.add('hidden');
+      if (dlStageTips) dlStageTips.classList.remove('hidden');
+    });
+  }
+
   // --- Navbar Dropdowns: Theme Mode & Language Selector ---
   const btnThemeDropdown = document.getElementById('btn-theme-dropdown');
   const menuTheme = document.getElementById('menu-theme');
@@ -675,7 +723,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: 'You are free to use this tool for personal and commercial image generation. You retain full ownership and copyright of all images you process using this web app.',
       modalTermsSec3Title: '3. Disclaimer of Liability',
       modalTermsSec3Text: 'This service is provided "as is" without warranties of any kind. We are not responsible for any platform policy changes by X (Twitter) or third-party social networks.',
-      modalTermsCloseBtn: 'I Agree'
+      modalTermsCloseBtn: 'I Agree',
+      modalDlTitle: 'Download Complete!',
+      modalDlSubtitle: 'How do you like the result?',
+      modalDlLove: 'Love it!',
+      modalDlNotQuite: 'Not quite',
+      modalShareTitle: 'Share your Kakushie on X!',
+      modalShareDesc: 'Share your tap-to-reveal PNG on X (Twitter) and tag your friends to test the magic! (Remember to post from a desktop browser so X keeps your image transparency).',
+      modalShareBtn: 'Share on X',
+      modalShareClose: 'Maybe later',
+      modalTipsTitle: 'Quick Tips for a Better Reveal',
+      modalTipsDesc: 'To get the best tap-to-reveal effect, try increasing the "Auto line art" slider or use the brush tool in Step 2 to mark visible outlines before export!',
+      modalTipsClose: 'Got it, thanks!'
     },
     es: {
       brandTitle: 'Tap&Hold Kakushie Maker',
@@ -771,7 +830,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: 'Eres libre de usar esta herramienta para uso personal y comercial. Conservas la propiedad total de tus imágenes.',
       modalTermsSec3Title: '3. Exención de responsabilidad',
       modalTermsSec3Text: 'Este servicio se proporciona "tal cual" sin garantías. No nos hacemos responsables de los cambios de políticas en X.',
-      modalTermsCloseBtn: 'Acepto'
+      modalTermsCloseBtn: 'Acepto',
+      modalDlTitle: '¡Descarga completada!',
+      modalDlSubtitle: '¿Qué te parece el resultado?',
+      modalDlLove: '¡Me encanta!',
+      modalDlNotQuite: 'No del todo',
+      modalShareTitle: '¡Comparte tu Kakushie en X!',
+      modalShareDesc: '¡Publica tu imagen de revelación en X (Twitter) y desafía a tus amigos! (Recuerda publicar desde un navegador de escritorio para mantener la transparencia).',
+      modalShareBtn: 'Compartir en X',
+      modalShareClose: 'Quizás luego',
+      modalTipsTitle: 'Consejos para un mejor resultado',
+      modalTipsDesc: 'Para un efecto más claro, prueba aumentar el deslizador de "Línea de arte auto" o usa el pincel en el Paso 2.',
+      modalTipsClose: '¡Entendido, gracias!'
     },
     fr: {
       brandTitle: 'Tap&Hold Kakushie Maker',
@@ -867,7 +937,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: 'Vous êtes libre d\'utiliser cet outil pour des besoins personnels ou commerciaux. Vous conservez vos droits d\'auteur.',
       modalTermsSec3Title: '3. Limite de responsabilité',
       modalTermsSec3Text: 'Ce service est fourni "en l\'état". Nous ne sommes pas responsables des modifications de politiques sur la plateforme X.',
-      modalTermsCloseBtn: 'J\'accepte'
+      modalTermsCloseBtn: 'J\'accepte',
+      modalDlTitle: 'Téléchargement terminé !',
+      modalDlSubtitle: 'Que pensez-vous du résultat ?',
+      modalDlLove: 'J\'adore !',
+      modalDlNotQuite: 'Pas vraiment',
+      modalShareTitle: 'Partagez votre Kakushie sur X !',
+      modalShareDesc: 'Partagez votre image à révéler sur X (Twitter) et identifiez vos amis ! (N\'oubliez pas de publier depuis un ordinateur pour préserver la transparence).',
+      modalShareBtn: 'Partager sur X',
+      modalShareClose: 'Plus tard',
+      modalTipsTitle: 'Astuces pour un meilleur rendu',
+      modalTipsDesc: 'Pour un effet plus marqué, augmentez le curseur "Dessin au trait auto" ou utilisez le pinceau à l\'étape 2.',
+      modalTipsClose: 'D\'accord, merci !'
     },
     pt: {
       brandTitle: 'Tap&Hold Kakushie Maker',
@@ -963,7 +1044,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: 'Você é livre para usar a ferramenta para fins pessoais ou comerciais.',
       modalTermsSec3Title: '3. Isenção de responsabilidade',
       modalTermsSec3Text: 'O serviço é fornecido "como está". Não nos responsabilizamos por mudanças nas regras do X.',
-      modalTermsCloseBtn: 'Concordo'
+      modalTermsCloseBtn: 'Concordo',
+      modalDlTitle: 'Download Concluído!',
+      modalDlSubtitle: 'O que achou do resultado?',
+      modalDlLove: 'Adorei!',
+      modalDlNotQuite: 'Não muito',
+      modalShareTitle: 'Compartilhe seu Kakushie no X!',
+      modalShareDesc: 'Poste sua imagem oculta no X (Twitter) e desafie seus amigos! (Poste a partir de um navegador de computador para manter a transparência).',
+      modalShareBtn: 'Compartilhar no X',
+      modalShareClose: 'Talvez mais tarde',
+      modalTipsTitle: 'Dicas para um resultado melhor',
+      modalTipsDesc: 'Para um efeito mais forte, tente aumentar o controle de "Desenho de linhas auto" ou use o pincel no Passo 2.',
+      modalTipsClose: 'Entendi, obrigado!'
     },
     ja: {
       brandTitle: 'Tap&Hold かくし絵メーカー',
@@ -1059,7 +1151,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: '個人利用・商用利用を問わず自由にご利用いただけます。作成した画像の著作権は作成者に帰属します。',
       modalTermsSec3Title: '3. 免責事項',
       modalTermsSec3Text: '本サービスは現状有姿で提供されます。X（旧Twitter）の仕様変更等による影響について責任を負いません。',
-      modalTermsCloseBtn: '同意する'
+      modalTermsCloseBtn: '同意する',
+      modalDlTitle: 'ダウンロード完了！',
+      modalDlSubtitle: '仕上がりはいかがですか？',
+      modalDlLove: '最高！大好き',
+      modalDlNotQuite: 'もう少し',
+      modalShareTitle: 'Xでかくし絵を共有しよう！',
+      modalShareDesc: '作成したタップ長押し画像をX（Twitter）に投稿してフォロワーに見せよう！（※透過を維持するためPCのブラウザから投稿してください）',
+      modalShareBtn: 'Xで共有する',
+      modalShareClose: '後で',
+      modalTipsTitle: 'より綺麗な隠し絵を作るコツ',
+      modalTipsDesc: '変化を大きくしたい場合は「自動線画」スライダーを上げるか、ステップ2のブラシで表示部分を塗ってみてください！',
+      modalTipsClose: 'わかりました！'
     },
     zh: {
       brandTitle: 'Tap&Hold 隐形图生成器',
@@ -1155,7 +1258,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: '您可以自由将本工具用于个人或商业图像制作。您保留处理后图片的完整版权。',
       modalTermsSec3Title: '3. 免责声明',
       modalTermsSec3Text: '本服务按“原样”提供。我们对 X 平台政策或渲染规则的变化概不负责。',
-      modalTermsCloseBtn: '同意'
+      modalTermsCloseBtn: '同意',
+      modalDlTitle: '下载完成！',
+      modalDlSubtitle: '您对效果满意吗？',
+      modalDlLove: '超级喜欢！',
+      modalDlNotQuite: '效果一般',
+      modalShareTitle: '在 X 上分享您的隐形图！',
+      modalShareDesc: '将您的长按显影图片发布到 X (Twitter) 上，让朋友们体验魔法吧！（注：请务必从电脑网页端发布以保持透明通道）。',
+      modalShareBtn: '在 X 上分享',
+      modalShareClose: '以后再说',
+      modalTipsTitle: '提升显影效果的小技巧',
+      modalTipsDesc: '想要更明显的显影效果，可以调高“自动线稿”滑块，或者在步骤2中使用画笔描绘轮廓！',
+      modalTipsClose: '好的，谢谢！'
     },
     ko: {
       brandTitle: 'Tap&Hold 카쿠시에 생성기',
@@ -1251,7 +1365,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: '개인적 및 상업적 용도로 자유롭게 사용하실 수 있습니다.',
       modalTermsSec3Title: '3. 면책 조항',
       modalTermsSec3Text: '본 서비스는 있는 그대로 제공됩니다. X 플랫폼의 정책 변경에 대해 책임을 지지 않습니다.',
-      modalTermsCloseBtn: '동의함'
+      modalTermsCloseBtn: '동의함',
+      modalDlTitle: '다운로드 완료!',
+      modalDlSubtitle: '결과물이 마음에 드시나요?',
+      modalDlLove: '완전 마음에 들어요!',
+      modalDlNotQuite: '조금 아쉬워요',
+      modalShareTitle: 'X에 카쿠시에를 공유해보세요!',
+      modalShareDesc: '새로 만든 탭 반응 이미지를 X(트위터)에 올리고 친구들을 태그해보세요! (투명도 유지를 위해 반드시 PC 브라우저에서 올리세요).',
+      modalShareBtn: 'X에 공유하기',
+      modalShareClose: '나중에',
+      modalTipsTitle: '더 멋진 결과를 위한 팁',
+      modalTipsDesc: '숨김 선명도를 높이려면 "자동 선화 추출" 슬라이더를 올리거나 2단계 브러시로 보여줄 영역을 직접 칠해보세요!',
+      modalTipsClose: '확인했어요!'
     },
     ar: {
       brandTitle: 'صانع Tap&Hold المخفي',
@@ -1347,7 +1472,18 @@ document.addEventListener('DOMContentLoaded', () => {
       modalTermsSec2Text: 'يحق لك استخدام هذه الأداة للأغراض الشخصية والتجارية.',
       modalTermsSec3Title: '3. إخلاء المسؤولية',
       modalTermsSec3Text: 'يتم تقديم الخدمة "كما هي". لسنا مسؤولين عن أي تغييرات في سياسات منصة X.',
-      modalTermsCloseBtn: 'أوافق'
+      modalTermsCloseBtn: 'أوافق',
+      modalDlTitle: 'اكتمل التحميل!',
+      modalDlSubtitle: 'كيف تجد النتيجة؟',
+      modalDlLove: 'أحببته جداً!',
+      modalDlNotQuite: 'ليس تماماً',
+      modalShareTitle: 'شارك صورتك المخفية على X!',
+      modalShareDesc: 'انشر صورتك على منصة X (تويتر) وتاق لأصدقائك لتحدي السحر! (تذكر النشر من متصفح الكمبيوتر للحفاظ على الشفافية).',
+      modalShareBtn: 'مشاركة على X',
+      modalShareClose: 'ربما لاحقاً',
+      modalTipsTitle: 'نصائح لتحسين التعرية',
+      modalTipsDesc: 'للحصول على تأثير أقوى، جرب زيادة شريط "خطوط الرسم التلقائية" أو استخدام الفرشاة في الخطوة 2!',
+      modalTipsClose: 'فهمت، شكراً!'
     }
   };
 
@@ -1709,6 +1845,10 @@ document.addEventListener('DOMContentLoaded', () => {
           link.click();
           document.body.removeChild(link);
         }
+
+        setTimeout(() => {
+          openDownloadFeedbackModal();
+        }, 400);
       } catch (err) {
         console.error('PNG-8 encoding error:', err);
       } finally {
