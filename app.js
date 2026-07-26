@@ -1352,19 +1352,37 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function detectSystemLanguage() {
-    const navLang = (navigator.language || (navigator.languages && navigator.languages[0]) || 'en').toLowerCase();
-    
-    if (navLang.startsWith('es')) return 'es';
-    if (navLang.startsWith('fr')) return 'fr';
-    if (navLang.startsWith('pt')) return 'pt';
-    if (navLang.startsWith('ja')) return 'ja';
-    if (navLang.startsWith('zh')) return 'zh';
-    if (navLang.startsWith('ko')) return 'ko';
-    if (navLang.startsWith('ar')) return 'ar';
+    try {
+      const savedLang = localStorage.getItem('preferred_lang');
+      if (savedLang && translations[savedLang]) {
+        return savedLang;
+      }
+    } catch (e) {
+      console.warn('localStorage access failed:', e);
+    }
+
+    const candidateLangs = [];
+    if (navigator.language) candidateLangs.push(navigator.language);
+    if (Array.isArray(navigator.languages)) candidateLangs.push(...navigator.languages);
+
+    const supportedLangs = ['en', 'es', 'fr', 'pt', 'ja', 'zh', 'ko', 'ar'];
+
+    for (const langStr of candidateLangs) {
+      if (!langStr) continue;
+      const code = langStr.toLowerCase().split('-')[0];
+      if (supportedLangs.includes(code)) {
+        return code;
+      }
+    }
+
     return 'en';
   }
 
   function applyThemeMode(theme) {
+    try {
+      localStorage.setItem('preferred_theme', theme);
+    } catch (e) {}
+
     optThemes.forEach(opt => {
       const t = opt.getAttribute('data-theme');
       const check = opt.querySelector('.check-theme');
@@ -1388,9 +1406,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function detectSystemTheme() {
+    try {
+      const savedTheme = localStorage.getItem('preferred_theme');
+      if (savedTheme) return savedTheme;
+    } catch (e) {}
+    return 'system';
+  }
+
   function applyLanguage(lang) {
     const t = translations[lang] || translations.en;
     
+    try {
+      localStorage.setItem('preferred_lang', lang);
+    } catch (e) {}
+
     optLangs.forEach(opt => {
       const l = opt.getAttribute('data-lang');
       const check = opt.querySelector('.check-lang');
@@ -1408,8 +1438,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
-      if (t[key]) {
-        el.textContent = t[key];
+      if (t[key] !== undefined) {
+        if (el.getAttribute('data-i18n-html') === 'true') {
+          el.innerHTML = t[key];
+        } else {
+          el.textContent = t[key];
+        }
       }
     });
   }
@@ -1417,6 +1451,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Initial System Setup on Load ---
   const initialSystemLang = detectSystemLanguage();
   applyLanguage(initialSystemLang);
+
+  const initialSystemTheme = detectSystemTheme();
+  applyThemeMode(initialSystemTheme);
 
   // --- Auto Line Art (Sobel Edge Detection) Algorithm ---
   function computeLineArtMask(threshold) {
