@@ -121,6 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateCanvasDimensions(w, h) {
+    w = (w % 2 !== 0) ? w + 1 : w;
+    h = (h % 2 !== 0) ? h + 1 : h;
     width = w;
     height = h;
     editCanvas.width = w;
@@ -1591,7 +1593,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialSystemTheme = detectSystemTheme();
   applyThemeMode(initialSystemTheme);
 
-  // --- Auto Line Art (Sobel Edge Detection) Algorithm ---
+  // --- Sobel Edge Detection for Auto Line Art (Exact Kakushie Master Engine) ---
   function computeLineArtMask(threshold) {
     if (threshold <= 0 || !state.imgMain) return null;
     const w = width;
@@ -1604,29 +1606,59 @@ document.addEventListener('DOMContentLoaded', () => {
     drawCover(tempCtx, state.imgMain, w, h);
 
     const imgData = tempCtx.getImageData(0, 0, w, h);
-    const data = imgData.data;
+    const bColor = imgData.data;
 
-    const gray = new Uint8Array(w * h);
-    for (let i = 0; i < w * h; i++) {
-      const p = i * 4;
-      gray[i] = (data[p] * 299 + data[p + 1] * 587 + data[p + 2] * 114) / 1000;
+    function getLuminance(x, y) {
+      const cx = x < 0 ? 0 : x >= w ? w - 1 : x;
+      const cy = y < 0 ? 0 : y >= h ? h - 1 : y;
+      const idx = 4 * (cy * w + cx);
+      return 0.2126 * bColor[idx] + 0.7152 * bColor[idx + 1] + 0.0722 * bColor[idx + 2];
     }
 
-    const lineArt = new Uint8Array(w * h);
-    const sensThreshold = Math.max(15, 230 - (threshold * 2.1));
+    const sensThreshold = Math.max(15, Math.round(230 - (threshold * 2.1)));
+    const rawEdges = new Uint8Array(w * h);
 
-    for (let y = 1; y < h - 1; y++) {
-      const row = y * w;
-      for (let x = 1; x < w - 1; x++) {
-        const idx = row + x;
-        const gx = -gray[idx - w - 1] + gray[idx - w + 1] - 2 * gray[idx - 1] + 2 * gray[idx + 1] - gray[idx + w - 1] + gray[idx + w + 1];
-        const gy = -gray[idx - w - 1] - 2 * gray[idx - w] - gray[idx - w + 1] + gray[idx + w - 1] + 2 * gray[idx + w] + gray[idx + w + 1];
-        if (Math.abs(gx) + Math.abs(gy) >= sensThreshold) {
-          lineArt[idx] = 1;
-        }
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const p00 = getLuminance(x - 1, y - 1);
+        const p10 = getLuminance(x, y - 1);
+        const p20 = getLuminance(x + 1, y - 1);
+        const p01 = getLuminance(x - 1, y);
+        const p21 = getLuminance(x + 1, y);
+        const p02 = getLuminance(x - 1, y + 1);
+        const p12 = getLuminance(x, y + 1);
+        const p22 = getLuminance(x + 1, y + 1);
+
+        const gx = p20 + 2 * p21 + p22 - (p00 + 2 * p01 + p02);
+        const gy = p02 + 2 * p12 + p22 - (p00 + 2 * p10 + p20);
+        const mag = Math.hypot(gx, gy);
+
+        rawEdges[y * w + x] = mag >= sensThreshold ? 1 : 0;
       }
     }
-    return lineArt;
+
+    // Dilate by 1px radius for crisp, visible line art
+    const dilated = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        let found = 0;
+        for (let dy = -1; dy <= 1 && !found; dy++) {
+          const ny = y + dy;
+          if (ny >= 0 && ny < h) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const nx = x + dx;
+              if (nx >= 0 && nx < w && rawEdges[ny * w + nx] === 1) {
+                found = 1;
+                break;
+              }
+            }
+          }
+        }
+        dilated[y * w + x] = found;
+      }
+    }
+
+    return dilated;
   }
 
   // --- High-Performance Rendering Pipelines ---
@@ -1682,7 +1714,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 2. Official Kakushie Maker Engine with Exact Solid Timeline Simulation (Light TL vs Dark TL)
+  // 2. Official Kakushie Master Engine with Exact Timeline Simulation
   function renderOutputCanvas() {
     ctxOut.clearRect(0, 0, width, height);
 
@@ -1702,29 +1734,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalPixels = width * height;
     
     // Auto Line Art Mask calculation
-    const lineArtMask = (state.autoLineArt > 0) ? computeLineArtMask(state.autoLineArt) : null;
+    const edgeMask = (state.autoLineArt > 0) ? computeLineArtMask(state.autoLineArt) : null;
 
-    // Effective mask: 1 = Hidden (unpainted), 0 = Revealed (brushed or auto line art)
+    // 2. Compute effective mask: 1 = Hidden (mesh applied), 0 = Revealed (brushed or edge)
     const maskEffective = new Uint8Array(totalPixels);
     for (let i = 0; i < totalPixels; i++) {
-      const isBrushed = (maskData.data[i * 4 + 3] > 0) || (lineArtMask && lineArtMask[i] === 1);
-      maskEffective[i] = isBrushed ? 0 : 1;
+      const isBrushed = maskData.data[i * 4 + 3] > 0;
+      const isEdge = edgeMask && edgeMask[i] === 1;
+      maskEffective[i] = (isBrushed || isEdge) ? 0 : 1;
     }
 
-    // 2. Brightness Boost (Multiplier from x1.0 to x2.0, default 1.5x for checkerboard pixels)
+    // 3. Brightness Boost (Multiplier applied to hidden checkerboard pixels)
     const boostFactor = typeof state.brightness === 'number' ? state.brightness : 1.5;
     
     const boostedData = new Uint8ClampedArray(dataB.data.length);
     for (let s = 0; s < totalPixels; s++) {
       const idx = 4 * s;
       const mult = (maskEffective[s] === 1) ? boostFactor : 1.0;
-      boostedData[idx]     = Math.min(255, dataB.data[idx] * mult);
-      boostedData[idx + 1] = Math.min(255, dataB.data[idx + 1] * mult);
-      boostedData[idx + 2] = Math.min(255, dataB.data[idx + 2] * mult);
+      boostedData[idx]     = Math.min(255, Math.round(dataB.data[idx] * mult));
+      boostedData[idx + 1] = Math.min(255, Math.round(dataB.data[idx + 1] * mult));
+      boostedData[idx + 2] = Math.min(255, Math.round(dataB.data[idx + 2] * mult));
       boostedData[idx + 3] = dataB.data[idx + 3];
     }
 
-    // 3. Apply Official 1-Pixel Interleaved Checkerboard Mesh (`applyCheckerMesh`)
+    // 4. Apply 1-Pixel Interleaved Checkerboard Mesh (`applyCheckerMesh`)
     const rawRgba = new Uint8ClampedArray(dataB.data.length);
     for (let y = 0; y < height; y++) {
       const rowOffset = y * width;
@@ -1739,22 +1772,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const isCheckerPixel = ((x + y) & 1) === 1; // 1-pixel interleaving
         const isHidden = maskEffective[n] === 1;
 
-        // If hidden AND checker pixel -> ALPHA = 0 (Transparent)! ELSE -> ALPHA = 255 (Opaque Full Color)!
+        // If hidden AND checker pixel -> ALPHA = 0! Else -> ALPHA = 255!
         rawRgba[s + 3] = (isHidden && isCheckerPixel) ? 0 : 255;
+      }
+    }
+
+    // 5. Darken Line Art edges to 50% brightness so outlines pop crisp & dark on timeline white background
+    if (edgeMask) {
+      for (let n = 0; n < totalPixels; n++) {
+        if (edgeMask[n] !== 1) continue;
+        const t = 4 * n;
+        rawRgba[t]     = Math.round(dataB.data[t] * 0.5);
+        rawRgba[t + 1] = Math.round(dataB.data[t + 1] * 0.5);
+        rawRgba[t + 2] = Math.round(dataB.data[t + 2] * 0.5);
+        rawRgba[t + 3] = 255;
       }
     }
 
     // Store raw RGBA buffer for export (PNG-8 export uses exact rawRgba!)
     state.currentRawRgba = rawRgba;
 
-    // 4. Render Preview Canvas for Timeline Simulation (Exact Match to User Screenshots)
+    // 6. Render Preview Canvas for Timeline Simulation
     if (state.isHolding) {
       // Tap & Hold state: Full resolution over black lightbox (reveals raw 1-pixel checkerboard mesh)
       outData.data.set(rawRgba);
     } else {
       // Timeline Simulation state:
-      // - Light TL: Solid Pure White (#FFFFFF) over hidden areas, Solid Original Color over brushed areas
-      // - Dark TL: Solid Pure Black (#000000) over hidden areas, Solid Original Color over brushed areas
       const isLightTl = state.previewBg === 'light';
       const bgR = isLightTl ? 255 : 0;
       const bgG = isLightTl ? 255 : 0;
@@ -1769,17 +1812,15 @@ document.addEventListener('DOMContentLoaded', () => {
           const isHidden = maskEffective[n] === 1;
 
           if (isHidden) {
-            // Unpainted hidden pixel on timeline: Solid White (Light TL) or Solid Black (Dark TL)!
             outData.data[s]     = bgR;
             outData.data[s + 1] = bgG;
             outData.data[s + 2] = bgB;
             outData.data[s + 3] = 255;
           } else {
-            // Brushed revealed pixel: Solid original full color!
             outData.data[s]     = rawRgba[s];
             outData.data[s + 1] = rawRgba[s + 1];
             outData.data[s + 2] = rawRgba[s + 2];
-            outData.data[s + 3] = 255;
+            outData.data[s + 3] = rawRgba[s + 3];
           }
         }
       }
