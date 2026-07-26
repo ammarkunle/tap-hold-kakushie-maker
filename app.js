@@ -586,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
       navTool: 'Tool', navFeatures: 'Features', navHowItWorks: 'How It Works', navWhatIs: 'What Is', navFaq: 'FAQ',
       heroBadge1: 'Free online tool — no signup required',
       heroBadge2: '100% Private — Photos never leave your browser',
-      heroTitle1: 'Free Tap&Hold Kakushie Image Maker.',
+      heroTitle1: 'Free Tap and Hold Kakushie Image Maker.',
       heroTitle2: 'Hide images on X timeline.',
       heroDesc: 'Tap Hold turns your picture into a transparent PNG that looks faint and empty in the X / Twitter timeline, then snaps into full color when someone taps and holds to enlarge it.',
       btnStartCreating: 'Start Creating',
