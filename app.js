@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Brush Tool State for Mask
     isDrawing: false,
-    brushSize: 50, // Range 25px to 150px (default 50px)
+    brushSize: 50, // Range 5px to 150px (default 50px)
     tool: 'brush', // 'brush' (Show before tap) | 'eraser' (Hide before tap)
     strokePoints: [],
     lastMidPoint: null,
