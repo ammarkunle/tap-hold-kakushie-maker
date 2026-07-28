@@ -35,31 +35,79 @@
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
 
-  <!-- JSON-LD Structured Data for Google Rich Snippets -->
+  <!-- GEO AI Optimization Deployment v1.1 -->
+  <!-- JSON-LD FAQPage Schema for Generative Engine Optimization (GEO) & Search Snippets -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Tap and Hold Image Maker",
-    "alternateName": "Tap and Hold Image Maker & X Kakushie Generator",
-    "url": "https://tap-and-hold-kakushie-maker.vercel.app/",
-    "logo": "https://tap-and-hold-kakushie-maker.vercel.app/favicon.png",
-    "description": "Free Tap and Hold Kakushie maker. Turn any picture into an X 'Tap and Hold' image: it looks blank in the timeline and reveals itself when you tap to enlarge.",
-    "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "All",
-    "offers": {
-      "@type": "Offer",
-      "price": "0.00",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "128"
-    }
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is an X Tap and Hold Kakushie image?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Kakushie (hidden image) is an interactive image created for X (formerly Twitter) using alpha-channel transparency tricks. In the timeline feed, the image appears blank or dark, but when a user taps or long-presses to enlarge, the full high-definition picture is revealed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I make a Tap and Hold image for Twitter?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Upload any picture to the free Tap and Hold Image Maker web app, adjust the threshold and contrast sliders using the real-time preview, and click Download PNG. Post the generated PNG image directly to X without cropping."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the Kakushie Generator free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Tap and Hold Image Maker is 100% free with no registration, software download, or watermarks required. All processing happens locally in your browser for privacy."
+        }
+      }
+    ]
   }
   </script>
-  
+
+  <!-- JSON-LD HowTo Schema for AI Search Engines & ChatGPT RAG Crawlers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Create a Twitter Tap and Hold Kakushie Image",
+    "description": "Step-by-step guide to generating interactive tap-and-hold hidden images for X (Twitter) using Tap and Hold Image Maker.",
+    "tool": [
+      {
+        "@type": "HowToTool",
+        "name": "Tap and Hold Image Maker (X Kakushie Generator)",
+        "url": "https://tap-and-hold-kakushie-maker.vercel.app/"
+      }
+    ],
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Upload Image",
+        "text": "Visit https://tap-and-hold-kakushie-maker.vercel.app/ and upload your target image or artwork.",
+        "url": "https://tap-and-hold-kakushie-maker.vercel.app/#upload"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Tune Opacity & Contrast",
+        "text": "Adjust threshold, opacity, and edge extraction sliders with live light vs dark mode preview.",
+        "url": "https://tap-and-hold-kakushie-maker.vercel.app/#controls"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Export PNG & Post to X",
+        "text": "Click Download PNG and upload the image directly to X (Twitter) without cropping.",
+        "url": "https://tap-and-hold-kakushie-maker.vercel.app/#export"
+      }
+    ]
+  }
+  </script>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
